@@ -36,6 +36,12 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
     Cursor calendarFrgCursor=null;
     SimpleCursorAdapter calendarFrgAdapter;
     ListView _calendarFrgList;
+
+    SQLiteDatabase dateSumDb;
+    private DatabaseHelper dateSumDbHelper;
+    Cursor dateSumCursor=null;
+    SimpleCursorAdapter dateSumAdapter;
+    TextView _dateSum;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -100,8 +106,31 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
                     (this.getContext(), db_lay, calendarFrgCursor, head, lay, 0);
             _calendarFrgList.setAdapter(calendarFrgAdapter);
             calendarFrgAdapter.notifyDataSetChanged();
+//
+//            // データ取り出し
+//            _dateSum = getActivity().findViewById(R.id.subDp);
+//            dateSumDbHelper = new DatabaseHelper(getActivity());
+//            //DBを読み込み可能状態で開く。
+//            //※getWritableDatabase（書き込み可能状態でも読み込みはできる）
+//            dateSumDb = dateSumDbHelper.getReadableDatabase();
+//            //DBへクエリーを発行し、カーソルを取得する。
+//            String sql2 = "SELECT _id,Date,SUM(Price) FROM DatePrice " +
+//                    "WHERE Date =" + "'" + mainActivity.getSqlDate() + "'";
+//            dateSumCursor = d.rawQuery(sql2, null);
+////                d.query("DatePrice", new String[]{"Category_Id as _id", "Price"}
+////                ,null, null, null, null, null);
+//            //取得したカーソルをカーソル用のアダプターに設定する。
+//            String[] head2 = {"SUM(Price)"};
+//            int[] lay2 = {R.id.lcategory1};
+//            int db_lay2 = R.layout.category_list;
+//            dateSumAdapter = new SimpleCursorAdapter
+//                    (this.getContext(), db_lay2, dateSumCursor, head2, lay2, 0);
+//            _dateSum.setAdapter(dateSumAdapter);
+//            dateSumAdapter.notifyDataSetChanged();
         }
+
     }
+
     public void onSelectedDayChange(CalendarView view, int year, int month,
                                     int dayOfMonth) {
 //        Toast.makeText(getContext(), year+"/"+(month + 1)+"/"+dayOfMonth, Toast.LENGTH_LONG ).show();// TODO Auto-generated method stub
@@ -137,6 +166,7 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
                 (this.getContext(), db_lay, calendarFrgCursor, head, lay, 0);
         _calendarFrgList.setAdapter(calendarFrgAdapter);
         calendarFrgAdapter.notifyDataSetChanged();
+
 
     }
 
