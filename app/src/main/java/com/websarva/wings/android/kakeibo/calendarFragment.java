@@ -35,46 +35,29 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
     private DatabaseHelper calendarFrgDbHelper;
     Cursor calendarFrgCursor=null;
     SimpleCursorAdapter calendarFrgAdapter;
-    ListView _calendarFrgList;
 
     SQLiteDatabase dateSumDb;
     private DatabaseHelper dateSumDbHelper;
     Cursor dateSumCursor=null;
     SimpleCursorAdapter dateSumAdapter;
+
+    ListView _calendarFrgList;
     TextView _dateSum;
+    CalendarView _cv;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_blank, container, false);
         View view2 = inflater.inflate(R.layout.fragment_calendar, container, false);
 
-
-        MainActivity mainActivity = (MainActivity) getActivity();
         _calendarFrgList = (ListView) view2.findViewById(R.id.list);
-        //DBHelpderを作成する。この時にDBが作成される。
-        calendarFrgDbHelper = new DatabaseHelper(getActivity());
-        //DBを読み込み可能状態で開く。
-        //※getWritableDatabase（書き込み可能状態でも読み込みはできる）
-        SQLiteDatabase d = calendarFrgDbHelper.getReadableDatabase();
-        //DBへクエリーを発行し、カーソルを取得する。
-        String sql = "SELECT _Id,Date,Small_category,Price,Memo FROM DatePrice "  +
-                "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
-                "WHERE Date =" +  "'" + mainActivity.getSqlDate() + "'";
-        calendarFrgCursor = d.rawQuery(sql,null);
-//                d.query("DatePrice", new String[]{"Category_Id as _id", "Price"}
-//                ,null, null, null, null, null);
-        //取得したカーソルをカーソル用のアダプターに設定する。
-        String[] head = {"Small_category","Price","Memo"};
-        int[] lay = {R.id.name,R.id.price,R.id.memo};
-        int db_lay = R.layout.listrow;
-        calendarFrgAdapter = new SimpleCursorAdapter
-                (view2.getContext(),db_lay,calendarFrgCursor, head, lay,0);
-        _calendarFrgList.setAdapter(calendarFrgAdapter);
+        _dateSum = view2.findViewById(R.id.subDp);
+        _cv = (CalendarView) view2.findViewById(R.id.calendarView1);
 
-        long date;
-        CalendarView cv = (CalendarView) view2.findViewById(R.id.calendarView1);
-//        date = cv.getDate();
-          cv.setOnDateChangeListener(this);
+        calendarFrgListDisp();
+
+        _cv.setOnDateChangeListener(this);
 
         return view2;
 
@@ -84,32 +67,10 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            MainActivity mainActivity = (MainActivity) getActivity();
-            _calendarFrgList = (ListView) getActivity().findViewById(R.id.list);
-            //DBHelpderを作成する。この時にDBが作成される。
-            calendarFrgDbHelper = new DatabaseHelper(getActivity());
-            //DBを読み込み可能状態で開く。
-            //※getWritableDatabase（書き込み可能状態でも読み込みはできる）
-            SQLiteDatabase d = calendarFrgDbHelper.getReadableDatabase();
-            //DBへクエリーを発行し、カーソルを取得する。
-            String sql = "SELECT _Id,Date,Small_category,Price,Memo FROM DatePrice " +
-                    "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
-                    "WHERE Date =" + "'" + mainActivity.getSqlDate() + "'";
-            calendarFrgCursor = d.rawQuery(sql, null);
-//                d.query("DatePrice", new String[]{"Category_Id as _id", "Price"}
-//                ,null, null, null, null, null);
-            //取得したカーソルをカーソル用のアダプターに設定する。
-            String[] head = {"Small_category", "Price", "Memo"};
-            int[] lay = {R.id.name, R.id.price, R.id.memo};
-            int db_lay = R.layout.listrow;
-            calendarFrgAdapter = new SimpleCursorAdapter
-                    (this.getContext(), db_lay, calendarFrgCursor, head, lay, 0);
-            _calendarFrgList.setAdapter(calendarFrgAdapter);
-            calendarFrgAdapter.notifyDataSetChanged();
 
+            calendarFrgListDisp();
 
-
-
+            textViewDateSum();
         }
 
     }
@@ -128,39 +89,12 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        _calendarFrgList = (ListView) getActivity().findViewById(R.id.list);
-        //DBHelpderを作成する。この時にDBが作成される。
-        calendarFrgDbHelper = new DatabaseHelper(getActivity());
-        //DBを読み込み可能状態で開く。
-        //※getWritableDatabase（書き込み可能状態でも読み込みはできる）
-        SQLiteDatabase d = calendarFrgDbHelper.getReadableDatabase();
-        //DBへクエリーを発行し、カーソルを取得する。
-        String sql = "SELECT _Id,Date,Small_category,Price,Memo FROM DatePrice " +
-                "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
-                "WHERE Date =" + "'" + mainActivity.getSqlDate() + "'";
-        calendarFrgCursor = d.rawQuery(sql, null);
-//                d.query("DatePrice", new String[]{"Category_Id as _id", "Price"}
-//                ,null, null, null, null, null);
-        //取得したカーソルをカーソル用のアダプターに設定する。
-        String[] head = {"Small_category", "Price", "Memo"};
-        int[] lay = {R.id.name, R.id.price, R.id.memo};
-        int db_lay = R.layout.listrow;
-        calendarFrgAdapter = new SimpleCursorAdapter
-                (this.getContext(), db_lay, calendarFrgCursor, head, lay, 0);
-        _calendarFrgList.setAdapter(calendarFrgAdapter);
-        calendarFrgAdapter.notifyDataSetChanged();
 
-        _dateSum = getActivity().findViewById(R.id.subDp);
-        // データ取り出し
+        calendarFrgListDisp();
 
-        String sql2 = "SELECT SUM(Price) FROM DatePrice " +
-                "WHERE Date =" + "'" + mainActivity.getSqlDate() + "'";
-        dateSumCursor = d.rawQuery(sql2,null);
-        Log.d("fff",dateSumCursor.getString(dateSumCursor.getColumnIndex("SUM(Price)"))+"");
-//        _dateSum.setText(dateSumCursor.getCount());
+        textViewDateSum();
+
     }
-
-
 
     /**
      * 日付文字列をlong値に変換する
@@ -178,5 +112,61 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
         long time = parse.getTime();
         return time;
     }
+
+    //日付ごとの合計をTextViewに表示
+    private void textViewDateSum(){
+        MainActivity mainActivity = (MainActivity) getActivity();
+        dateSumDbHelper = new DatabaseHelper(getActivity());
+
+        // データ取り出し
+        dateSumDb = dateSumDbHelper.getReadableDatabase();
+
+        // SQLの実行。
+        String sql2 = "SELECT SUM(Price) FROM DatePrice WHERE Date =" + "'" + mainActivity.getSqlDate() + "'";
+        dateSumCursor = dateSumDb.rawQuery(sql2, null);
+
+        // データベース内のCursorを移動
+        dateSumCursor.move(1);
+        // TextViewを取得しデータベースの値を反映。
+        _dateSum.setText(dateSumCursor.getString(0));
+
+    }
+
+    private void calendarFrgListDisp(){
+        MainActivity mainActivity = (MainActivity) getActivity();
+        //DBHelpderを作成する。この時にDBが作成される。
+        calendarFrgDbHelper = new DatabaseHelper(getActivity());
+        //DBを読み込み可能状態で開く。
+        //※getWritableDatabase（書き込み可能状態でも読み込みはできる）
+        SQLiteDatabase d = calendarFrgDbHelper.getReadableDatabase();
+        //DBへクエリーを発行し、カーソルを取得する。
+        String sql = "SELECT _Id,Date,Small_category,Price,Memo FROM DatePrice " +
+                "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
+                "WHERE Date =" + "'" + mainActivity.getSqlDate() + "'";
+        calendarFrgCursor = d.rawQuery(sql, null);
+        //取得したカーソルをカーソル用のアダプターに設定する。
+        String[] head = {"Small_category", "Price", "Memo"};
+        int[] lay = {R.id.name, R.id.price, R.id.memo};
+        int db_lay = R.layout.listrow;
+        calendarFrgAdapter = new SimpleCursorAdapter
+                (this.getContext(), db_lay, calendarFrgCursor, head, lay, 0);
+        _calendarFrgList.setAdapter(calendarFrgAdapter);
+        calendarFrgAdapter.notifyDataSetChanged();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
