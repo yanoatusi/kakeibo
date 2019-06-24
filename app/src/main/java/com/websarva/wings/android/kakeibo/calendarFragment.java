@@ -150,6 +150,15 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
         int db_lay = R.layout.listrow;
         calendarFrgAdapter = new SimpleCursorAdapter
                 (this.getContext(), db_lay, calendarFrgCursor, head, lay, 0);
+        calendarFrgAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+                TextView number = (TextView) view;
+                //タップしたSmall_categoryの行番号と文字列の取得
+                number.setText(cursor.getString(cursor.getColumnIndex("Small_category")));
+
+                return true;
+            }
+        });
         _calendarFrgList.setAdapter(calendarFrgAdapter);
         calendarFrgAdapter.notifyDataSetChanged();
     }
