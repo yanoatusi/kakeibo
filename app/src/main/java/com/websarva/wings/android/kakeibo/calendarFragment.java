@@ -3,6 +3,7 @@ package com.websarva.wings.android.kakeibo;
 
 import android.app.Activity;
 import android.content.Intent;
+
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.ListView;
@@ -150,15 +152,7 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
         int db_lay = R.layout.listrow;
         calendarFrgAdapter = new SimpleCursorAdapter
                 (this.getContext(), db_lay, calendarFrgCursor, head, lay, 0);
-        calendarFrgAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
-            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-                TextView number = (TextView) view;
-                //タップしたSmall_categoryの行番号と文字列の取得
-                number.setText(cursor.getString(cursor.getColumnIndex("Small_category")));
 
-                return true;
-            }
-        });
         _calendarFrgList.setAdapter(calendarFrgAdapter);
         calendarFrgAdapter.notifyDataSetChanged();
     }

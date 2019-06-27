@@ -95,8 +95,8 @@ public class BlankFragment extends Fragment {
     int categoryIdSave = 0;
     int memoIdSave = 0;
 
-    SimpleCursorAdapter adapter;
-    private SimpleCursorAdapter CategoryAdapter1;
+    private SimpleCursorAdapter adapter;
+    private SimpleCursorAdapter gridAdapter;
     private SimpleCursorAdapter CategoryAdapter2;
     private SimpleCursorAdapter _saveAdapter;
 
@@ -186,6 +186,8 @@ public class BlankFragment extends Fragment {
         _backDate.setOnClickListener(event);
         _nextDate.setOnClickListener(event);
 
+
+        //条件検索で使用する日付文字列
         //DBHelpderを作成する。この時にDBが作成される。
         dbHelper = new DatabaseHelper(getActivity());
         //DBを読み込み可能状態で開く。
@@ -202,17 +204,20 @@ public class BlankFragment extends Fragment {
         String[] head = {"Small_category","Price","Memo"};
         int[] lay = {R.id.name,R.id.price,R.id.memo};
         int db_lay = R.layout.listrow;
-        adapter = new SimpleCursorAdapter
-                (view.getContext(),db_lay,gridcursor, head, lay,0);
+        gridAdapter = new SimpleCursorAdapter
+                (getContext(),db_lay,gridcursor, head, lay,0);
 
-        _gridView.setAdapter(adapter);
+        _gridView.setAdapter(gridAdapter);
+
+
+
 //        listcreatAdapter(_gridView,"SELECT _Id,Date,Small_category,Price,Memo FROM DatePrice " +
 //                "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id ",
 //                new String[]{"Small_category","Price","Memo"},new int[]{R.id.name,R.id.price,R.id.memo},R.layout.listrow);
 
 
 //        Category表示
-        listcreatAdapter(_largeCotegoryList,"SELECT rowid as _id,Attributable_Type, Large_category FROM Category WHERE Attributable_Type = '支出' GROUP BY Large_category",
+        listcreatAdapter(_largeCotegoryList,"SELECT Category_Id as _id,Attributable_Type, Large_category FROM Category WHERE Attributable_Type = '支出' GROUP BY Large_category ORDER BY Category_Id",
                 new String[]{"Large_category"},new int[]{R.id.lcategory1},R.layout.category_list);
 
 
@@ -386,10 +391,7 @@ Log.d("qwas",priceNote+"");
 
                 _memoNote.setText("");
                 _btnSave.setEnabled(false);
-                replayDatabase("SELECT _Id,Small_category,Price,Memo FROM DatePrice " +
-                                "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
-                                "WHERE Date =" +  "'" + mainActivity.getSqlDate() + "'",
-                        new String[]{"Small_category","Price","Memo"},new int[]{R.id.name,R.id.price,R.id.memo},R.layout.listrow);
+                replayDatabase();
 
 
 
@@ -509,10 +511,7 @@ Log.d("qwas",priceNote+"");
                     Log.d("opq",inputStr);
                     mainActivity.setSqlDate(inputStr);
                     Log.d("setaaa",inputStr+"");
-                    replayDatabase("SELECT _Id,Small_category,Price,Memo FROM DatePrice " +
-                                    "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
-                                    "WHERE Date =" +  "'" + inputStr + "'",
-                            new String[]{"Small_category","Price","Memo"},new int[]{R.id.name,R.id.price,R.id.memo},R.layout.listrow);
+                    replayDatabase();
                     break;
                 case R.id.typePrice:
                     if (! inputStr.toString().equals("")) {
@@ -537,23 +536,61 @@ Log.d("qwas",priceNote+"");
             }
         }
     }
-    public void replayDatabase(String sql, String[] headers, int[] layouts,int db_layouts) {
+    public void replayDatabase() {
+        MainActivity mainActivity = (MainActivity) getActivity();
         //条件検索で使用する日付文字列
-
         //DBHelpderを作成する。この時にDBが作成される。
         dbHelper = new DatabaseHelper(getActivity());
-        //DBを読み込み可能状態で開く
+        //DBを読み込み可能状態で開く。
         //※getWritableDatabase（書き込み可能状態でも読み込みはできる）
         SQLiteDatabase d = dbHelper.getReadableDatabase();
         //DBへクエリーを発行し、カーソルを取得する。
+        String sql = "SELECT _Id,Date,Small_category,Price,Memo FROM DatePrice "  +
+                "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
+                "WHERE Date =" +  "'" + mainActivity.getSqlDate() + "'";
         gridcursor = d.rawQuery(sql,null);
-        _saveAdapter = new SimpleCursorAdapter
-                (getContext(),db_layouts,gridcursor, headers, layouts,0);
-        _gridView.setAdapter(_saveAdapter);
-        adapter.notifyDataSetChanged();
+//                d.query("DatePrice", new String[]{"Category_Id as _id", "Price"}
+//                ,null, null, null, null, null);
+        //取得したカーソルをカーソル用のアダプターに設定する。
+        String[] head = {"Small_category","Price","Memo"};
+        int[] lay = {R.id.name,R.id.price,R.id.memo};
+        int db_lay = R.layout.listrow;
+        adapter = new SimpleCursorAdapter
+                (getContext(),db_lay,gridcursor, head, lay,0);
+
+        _gridView.setAdapter(adapter);
+
     }
 
-    public void listcreatAdapter(View view, String sql, String[] headers, int[] layouts,int db_layouts) {
+    private void gridDatabase() {
+
+        MainActivity mainActivity = (MainActivity) getActivity();
+        //条件検索で使用する日付文字列
+        //DBHelpderを作成する。この時にDBが作成される。
+        dbHelper = new DatabaseHelper(getActivity());
+        //DBを読み込み可能状態で開く。
+        //※getWritableDatabase（書き込み可能状態でも読み込みはできる）
+        SQLiteDatabase d = dbHelper.getReadableDatabase();
+        //DBへクエリーを発行し、カーソルを取得する。
+        String sql = "SELECT _Id,Date,Small_category,Price,Memo FROM DatePrice "  +
+                "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
+                "WHERE Date =" +  "'" + mainActivity.getSqlDate() + "'";
+        gridcursor = d.rawQuery(sql,null);
+//                d.query("DatePrice", new String[]{"Category_Id as _id", "Price"}
+//                ,null, null, null, null, null);
+        //取得したカーソルをカーソル用のアダプターに設定する。
+        String[] head = {"Small_category","Price","Memo"};
+        int[] lay = {R.id.name,R.id.price,R.id.memo};
+        int db_lay = R.layout.listrow;
+        gridAdapter = new SimpleCursorAdapter
+                (getContext(),db_lay,gridcursor, head, lay,0);
+
+        _gridView.setAdapter(gridAdapter);
+
+
+    }
+
+    private void listcreatAdapter(View view, String sql, String[] headers, int[] layouts,int db_layouts) {
         ListView listView = (ListView) view;
         //DBHelpderを作成する。この時にDBが作成される。
         dbHelper = new DatabaseHelper(getActivity());

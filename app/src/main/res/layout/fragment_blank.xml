@@ -15,7 +15,7 @@
         android:layout_marginBottom="5dp"
 
         android:background="@color/white"
-        android:numColumns="2" />
+        android:numColumns="auto_fit" />
 
 
 
