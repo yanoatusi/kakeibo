@@ -602,7 +602,7 @@ Log.d("qwas",priceNote+"");
         _saveAdapter = new SimpleCursorAdapter
                 (getContext(),db_layouts,cursor, headers, layouts,0);
         listView.setAdapter(_saveAdapter);
-        adapter.notifyDataSetChanged();
+        _saveAdapter.notifyDataSetChanged();
     }
 
 }
