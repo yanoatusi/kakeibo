@@ -1,35 +1,30 @@
 package com.websarva.wings.android.kakeibo;
 
 
-import android.app.Activity;
-import android.content.Intent;
-
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-
-import com.websarva.wings.android.kakeibo.R;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class calendarFragment extends Fragment implements CalendarView.OnDateChangeListener {
 
@@ -46,6 +41,7 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
     ListView _calendarFrgList;
     TextView _dateSum;
     CalendarView _cv;
+    DatabaseHelper FrgDbHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,6 +56,8 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
         calendarFrgListDisp();
 
         _cv.setOnDateChangeListener(this);
+
+        setupPieChart(view2.findViewById(R.id.y));
 
         return view2;
 
@@ -156,20 +154,49 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
         _calendarFrgList.setAdapter(calendarFrgAdapter);
         calendarFrgAdapter.notifyDataSetChanged();
     }
+    float rainfall[] = {98.8f, 123.8f, 34.6f, 43.9f, 69.4f, 12.5f, 52.8f, 158.6f,
+            203.6f, 30.7f, 160.7f, 159.7f };
+    String monthNames[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
+            "Sep", "Oct", "Nov", "Dec"};
+    String[] columnName, type, nullable;
+    private void setupPieChart(View view) {
+        //PieEntriesのリストを作成する:
+        FrgDbHelper = new DatabaseHelper(getActivity());
+        SQLiteDatabase d = FrgDbHelper.getReadableDatabase();
+        String sql = "SELECT _Id,Date,Large_category,Price,Memo FROM DatePrice " +
+                "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
+                "WHERE Date LIKE" + "'%" + "月" + "%'"+
+                "GROUP BY Large_category ";
+        Cursor cursor = d.rawQuery(sql, null);
 
+//Ge
+        List<PieEntry> pieEntries = new ArrayList<>();
+        for (int i = 0; i < rainfall.length; i++) {
+            pieEntries.add(new PieEntry(rainfall[i], monthNames[i]));
+        }
 
+        PieDataSet dataSet = new PieDataSet(pieEntries, "Rainfall for Vancouver");
+        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        PieData data = new PieData(dataSet);
 
-
-
-
-
-
-
-
-
-
-
-
-
+        //PieChartを取得する:
+        PieChart piechart = (PieChart) view;
+        piechart.setData(data);
+        piechart.invalidate();
+    }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
