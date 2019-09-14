@@ -20,6 +20,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.sql.ResultSet;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
         }
 
     }
-
+String ymonth;
     public void onSelectedDayChange(CalendarView view, int year, int month,
                                     int dayOfMonth) {
 //        Toast.makeText(getContext(), year+"/"+(month + 1)+"/"+dayOfMonth, Toast.LENGTH_LONG ).show();// TODO Auto-generated method stub
@@ -86,6 +87,7 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
             Log.d("rrrrr", _date + "");
             Date selectDate = sdFormat.parse(_date);
             mainActivity.setTextView(sdFormat.format(selectDate));
+            ymonth = sdFormat.format(selectDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -161,15 +163,14 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
     String[] columnName, type, nullable;
     private void setupPieChart(View view) {
         //PieEntriesのリストを作成する:
+        MainActivity mainActivity = (MainActivity) getActivity();
         FrgDbHelper = new DatabaseHelper(getActivity());
         SQLiteDatabase d = FrgDbHelper.getReadableDatabase();
         String sql = "SELECT _Id,Date,Large_category,Price,Memo FROM DatePrice " +
                 "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
-                "WHERE Date LIKE" + "'%" + "月" + "%'"+
+                "WHERE Date LIKE" + "'%" + mainActivity.getSqlDate().substring(1,8) + "%'"+
                 "GROUP BY Large_category ";
         Cursor cursor = d.rawQuery(sql, null);
-
-//Ge
         List<PieEntry> pieEntries = new ArrayList<>();
         for (int i = 0; i < rainfall.length; i++) {
             pieEntries.add(new PieEntry(rainfall[i], monthNames[i]));

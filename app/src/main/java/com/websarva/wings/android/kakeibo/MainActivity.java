@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity   {
     //入力した文字列型の日付から数値型の日取得
     public int intDay() {
         String str = set_nowDate().getText().toString();
-        int i = Integer.parseInt(str.substring(8,10));
+             int i = Integer.parseInt(str.substring(8,10));
         return i;
     }
 
