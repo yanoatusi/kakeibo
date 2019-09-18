@@ -93,7 +93,7 @@ String ymonth;
         }
 
         calendarFrgListDisp();
-
+        setupPieChart(getView().findViewById(R.id.y));
         textViewDateSum();
 
     }
@@ -155,28 +155,23 @@ String ymonth;
 
         _calendarFrgList.setAdapter(calendarFrgAdapter);
         calendarFrgAdapter.notifyDataSetChanged();
+
     }
-    float rainfall[] = {98.8f, 123.8f, 34.6f, 43.9f, 69.4f, 12.5f, 52.8f, 158.6f,
-            203.6f, 30.7f, 160.7f, 159.7f };
-    String monthNames[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
-            "Sep", "Oct", "Nov", "Dec"};
-    String[] columnName, type, nullable;
+
     private void setupPieChart(View view) {
         //PieEntriesのリストを作成する:
-        MainActivity mainActivity = (MainActivity) getActivity();
-        FrgDbHelper = new DatabaseHelper(getActivity());
-        SQLiteDatabase d = FrgDbHelper.getReadableDatabase();
-        String sql = "SELECT _Id,Date,Large_category,Price,Memo FROM DatePrice " +
-                "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
-                "WHERE Date LIKE" + "'%" + mainActivity.getSqlDate().substring(1,8) + "%'"+
-                "GROUP BY Large_category ";
-        Cursor cursor = d.rawQuery(sql, null);
+
+        float[] floatArray = new float[floatContacts().length];
+        for (int i = 0; i < floatContacts().length; i++){
+            float x = Float.parseFloat(floatContacts()[i]);
+            floatArray[i] = x;
+        }
         List<PieEntry> pieEntries = new ArrayList<>();
-        for (int i = 0; i < rainfall.length; i++) {
-            pieEntries.add(new PieEntry(rainfall[i], monthNames[i]));
+        for (int i = 0; i < floatContacts().length; i++) {
+            pieEntries.add(new PieEntry(floatArray[i], getContacts()[i]));
         }
 
-        PieDataSet dataSet = new PieDataSet(pieEntries, "Rainfall for Vancouver");
+        PieDataSet dataSet = new PieDataSet(pieEntries, "日毎");
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         PieData data = new PieData(dataSet);
 
@@ -184,8 +179,47 @@ String ymonth;
         PieChart piechart = (PieChart) view;
         piechart.setData(data);
         piechart.invalidate();
+
     }
 
+    public String[] names;
+    public String[] getContacts(){
+        MainActivity mainActivity = (MainActivity) getActivity();
+        FrgDbHelper = new DatabaseHelper(getActivity());
+        SQLiteDatabase d = FrgDbHelper.getReadableDatabase();
+        String sql = "SELECT _Id,Date,Large_category,Price,Memo FROM DatePrice " +
+                "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
+                "WHERE Date LIKE" + "'%" + mainActivity.getSqlDate() + "%'"+
+                "GROUP BY Large_category ";
+        Cursor cursor = d.rawQuery(sql, null);
+        cursor.moveToFirst();
+        ArrayList<String> names = new ArrayList<String>();
+        while(!cursor.isAfterLast()) {
+            names.add(cursor.getString(cursor.getColumnIndex("Large_category")));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return names.toArray(new String[names.size()]);
+    }
+
+    public String[] floatContacts(){
+        MainActivity mainActivity = (MainActivity) getActivity();
+        FrgDbHelper = new DatabaseHelper(getActivity());
+        SQLiteDatabase d = FrgDbHelper.getReadableDatabase();
+        String sql = "SELECT _Id,Date,Large_category,Price,Memo FROM DatePrice " +
+                "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
+                "WHERE Date LIKE" + "'%" + mainActivity.getSqlDate() + "%'"+
+                "GROUP BY Large_category ";
+        Cursor cursor = d.rawQuery(sql, null);
+        cursor.moveToFirst();
+        ArrayList<String> names = new ArrayList<String>();
+        while(!cursor.isAfterLast()) {
+            names.add(cursor.getString(cursor.getColumnIndex("Price")));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return names.toArray(new String[names.size()]);
+    }
 }
 
 

@@ -443,7 +443,7 @@ Log.d("qwas",priceNote+"");
             Log.d("ppppp",attributableName+"");
             switch (attributableName) {
                 case "支出":
-                    _priceType = -1;
+                    _priceType = 1;
                     break;
                 case "収入":
                     _priceType = 1;
