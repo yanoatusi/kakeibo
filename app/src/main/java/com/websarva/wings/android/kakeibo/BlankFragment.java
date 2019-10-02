@@ -133,8 +133,10 @@ public class BlankFragment extends Fragment {
         _nowDate= (EditText) view.findViewById(R.id.nowDate);
         _nextDate = (Button) view.findViewById(R.id.nextDate);
 
-        // idが_nowDatenのButtonを取得
+
         MainActivity mainActivity = (MainActivity) getActivity();
+        // idが_nowDatenのButtonを取得
+
         mainActivity.setNowDate(_nowDate);
         mainActivity.setSqlDate(_nowDate.getText().toString());
         Log.d("BlankFrg_getSqlDate1",mainActivity.getSqlDate()+"");
@@ -186,36 +188,7 @@ public class BlankFragment extends Fragment {
         _backDate.setOnClickListener(event);
         _nextDate.setOnClickListener(event);
 
-
-        //条件検索で使用する日付文字列
-        //DBHelpderを作成する。この時にDBが作成される。
-        dbHelper = new DatabaseHelper(getActivity());
-        //DBを読み込み可能状態で開く。
-        //※getWritableDatabase（書き込み可能状態でも読み込みはできる）
-        SQLiteDatabase d = dbHelper.getReadableDatabase();
-        //DBへクエリーを発行し、カーソルを取得する。
-        String sql = "SELECT _Id,Date,Small_category,Price,Memo FROM DatePrice "  +
-                "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
-                "WHERE Date =" +  "'" + mainActivity.getSqlDate() + "'";
-        gridcursor = d.rawQuery(sql,null);
-//                d.query("DatePrice", new String[]{"Category_Id as _id", "Price"}
-//                ,null, null, null, null, null);
-        //取得したカーソルをカーソル用のアダプターに設定する。
-        String[] head = {"Small_category","Price","Memo"};
-        int[] lay = {R.id.name,R.id.price,R.id.memo};
-        int db_lay = R.layout.listrow;
-        gridAdapter = new SimpleCursorAdapter
-                (getContext(),db_lay,gridcursor, head, lay,0);
-
-        _gridView.setAdapter(gridAdapter);
-
-
-
-//        listcreatAdapter(_gridView,"SELECT _Id,Date,Small_category,Price,Memo FROM DatePrice " +
-//                "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id ",
-//                new String[]{"Small_category","Price","Memo"},new int[]{R.id.name,R.id.price,R.id.memo},R.layout.listrow);
-
-
+        set_gridView();
 //        Category表示
         listcreatAdapter(_largeCotegoryList,"SELECT Category_Id as _id,Attributable_Type, Large_category FROM Category WHERE Attributable_Type = '支出' GROUP BY Large_category ORDER BY Category_Id",
                 new String[]{"Large_category"},new int[]{R.id.lcategory1},R.layout.category_list);
@@ -352,6 +325,7 @@ public class BlankFragment extends Fragment {
 
 //                DatePriceStmt.bindLong(1, _DatePriceId=_DatePriceId+ 1);
                     DatePriceStmt.bindString(2, mainActivity.getSqlDate());
+
                     DatePriceStmt.bindLong(3, priceNote * _priceType);
                     DatePriceStmt.bindLong(4, categoryIdSave);
                     DatePriceStmt.bindString(5, memoNote);
@@ -382,7 +356,7 @@ Log.d("qwas",priceNote+"");
                 Log.d("ppppp",attributableName+"");
                 switch (attributableName) {
                     case "支出":
-                        _priceType = -1;
+                        _priceType = 1;
                         break;
                     case "収入":
                         _priceType = 1;
@@ -449,30 +423,6 @@ Log.d("qwas",priceNote+"");
                     _priceType = 1;
                     break;
             }
-            //データベースヘルパーオブジェクトからデータベース接続オブジェクトを取得。
-            SQLiteDatabase db = helper.getWritableDatabase();
-//            try {
-//                //主キーによる検索SQL文字列の用意。
-//                String sql = "SELECT * FROM DatePrice WHERE _id = " + _DatePriceId;
-//                //SQLの実行。
-//                Cursor cursor = db.rawQuery(sql, null);
-//                //データベースから取得した値を格納する変数の用意。データがなかった時のための初期値も用意。
-//                String note = "";
-//                //SQL実行の戻り値であるカーソルオブジェクトをループさせてデータベース内のデータを取得。
-//                while (cursor.moveToNext()) {
-//                    //カラムのインデックス値を取得。
-//                    int idxNote = cursor.getColumnIndex("Price");
-//                    //カラムのインデックス値を元に実際のデータを取得。
-//                    note = cursor.getString(idxNote);
-//                }
-//                //感想のEditTextの各画面部品を取得しデータベースの値を反映。
-//                EditText price = getView().findViewById(R.id.typePrice);
-//                price.setText(note);
-//            }
-//            finally {
-//                //データベース接続オブジェクトの解放。
-//                db.close();
-//            }
         }
 
     }
@@ -508,7 +458,6 @@ Log.d("qwas",priceNote+"");
                 case R.id.nowDate:
                     //日付変更を検知する度更新
                     MainActivity mainActivity = (MainActivity) getActivity();
-                    Log.d("opq",inputStr);
                     mainActivity.setSqlDate(inputStr);
                     Log.d("setaaa",inputStr+"");
                     replayDatabase();
@@ -562,16 +511,29 @@ Log.d("qwas",priceNote+"");
 
     }
 
-    private void gridDatabase() {
-
-        MainActivity mainActivity = (MainActivity) getActivity();
-        //条件検索で使用する日付文字列
+    private void listcreatAdapter(View view, String sql, String[] headers, int[] layouts,int db_layouts) {
+        ListView listView = (ListView) view;
         //DBHelpderを作成する。この時にDBが作成される。
         dbHelper = new DatabaseHelper(getActivity());
         //DBを読み込み可能状態で開く。
         //※getWritableDatabase（書き込み可能状態でも読み込みはできる）
         SQLiteDatabase d = dbHelper.getReadableDatabase();
         //DBへクエリーを発行し、カーソルを取得する。
+        cursor = d.rawQuery(sql,null);
+        _saveAdapter = new SimpleCursorAdapter
+                (getContext(),db_layouts,cursor, headers, layouts,0);
+        listView.setAdapter(_saveAdapter);
+        _saveAdapter.notifyDataSetChanged();
+    }
+    public void set_gridView (){
+        MainActivity mainActivity = (MainActivity) getActivity();//条件検索で使用する日付文字列
+        //DBHelpderを作成する。この時にDBが作成される。
+        dbHelper = new DatabaseHelper(getActivity());
+        //DBを読み込み可能状態で開く。
+        //※getWritableDatabase（書き込み可能状態でも読み込みはできる）
+        SQLiteDatabase d = dbHelper.getReadableDatabase();
+        //DBへクエリーを発行し、カーソルを取得する。
+
         String sql = "SELECT _Id,Date,Small_category,Price,Memo FROM DatePrice "  +
                 "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
                 "WHERE Date =" +  "'" + mainActivity.getSqlDate() + "'";
@@ -587,22 +549,6 @@ Log.d("qwas",priceNote+"");
 
         _gridView.setAdapter(gridAdapter);
 
-
+        Log.d("sqla"," ");
     }
-
-    private void listcreatAdapter(View view, String sql, String[] headers, int[] layouts,int db_layouts) {
-        ListView listView = (ListView) view;
-        //DBHelpderを作成する。この時にDBが作成される。
-        dbHelper = new DatabaseHelper(getActivity());
-        //DBを読み込み可能状態で開く。
-        //※getWritableDatabase（書き込み可能状態でも読み込みはできる）
-        SQLiteDatabase d = dbHelper.getReadableDatabase();
-        //DBへクエリーを発行し、カーソルを取得する。
-        cursor = d.rawQuery(sql,null);
-        _saveAdapter = new SimpleCursorAdapter
-                (getContext(),db_layouts,cursor, headers, layouts,0);
-        listView.setAdapter(_saveAdapter);
-        _saveAdapter.notifyDataSetChanged();
-    }
-
 }

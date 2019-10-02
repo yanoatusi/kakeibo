@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,11 +35,12 @@ public class MainActivity extends AppCompatActivity   {
     private String sqlDate;
     private DatabaseHelper dbHelper;
     private SQLiteDatabase db;
+    Cursor gridcursor=null;
     private Cursor cursor=null;
     private SimpleCursorAdapter simpleCursorAdapter;
-
+    private SimpleCursorAdapter gridAdapter;
     private NonSwipeableViewPager pager;
-
+private GridView _gridView;
     private FragmentPagerAdapter adapter;
 
     private int currentPage;
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity   {
         setContentView(R.layout.activity_main);
 
         pager = (NonSwipeableViewPager)findViewById(R.id.pager);
-
+_gridView= findViewById(R.id.gridView);
         adapter = new UserInfoViewPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
         currentPage = 0;
@@ -67,10 +69,6 @@ public class MainActivity extends AppCompatActivity   {
     public EditText set_nowDate(){
         EditText editText = findViewById(R.id.nowDate);
         return editText;
-    }
-    public void onClickGoToTop(View view) {
-        currentPage = 0;
-        pager.setCurrentItem(currentPage);
     }
     // ダイアログで入力した値をtextViewに入れる - ダイアログから呼び出される
     public void setTextView(String value){
@@ -100,12 +98,6 @@ public class MainActivity extends AppCompatActivity   {
         Log.d("etyu2",str+"");
     }
 
-    public String buttonStr(View plusMinus){
-        Button button = (Button) findViewById(plusMinus.getId());
-        String buttonStr = button.getText().toString();
-        return buttonStr;
-    }
-
     //入力した文字列型の日付から数値型の月取得
     public int intMonth() {
         String str = set_nowDate().getText().toString();
@@ -120,11 +112,6 @@ public class MainActivity extends AppCompatActivity   {
         return i;
     }
 
-    //textviewの文字列取得
-    public String strStart() {
-        String str = set_nowDate().getText().toString();
-        return str;
-    }
     //現在の日付セット
     public void setNowDate(TextView dialogBtn) {
         try {
@@ -141,33 +128,6 @@ public class MainActivity extends AppCompatActivity   {
         }
     }
 
-    public void getDialogSelectDate (TextView dialogBtn) {
-        try {
-            Calendar cal = Calendar.getInstance();
-            int year = cal.get(Calendar.YEAR);
-            int month = cal.get(Calendar.MONTH);
-            int day = cal.get(Calendar.DAY_OF_MONTH);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
-            String date = year + "年" + (month + 1) + "月" + day + "日";
-            Date selectDate = sdf.parse(date);
-            dialogBtn.setText(sdf.format(selectDate));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
-    public void mainListcreatAdapter(View view, String sql, String[] headers, int[] layouts,int db_layouts) {
-        ListView listView = (ListView) view;
-        //DBHelpderを作成する。この時にDBが作成される。
-        dbHelper = new DatabaseHelper(this);
-        //DBを読み込み可能状態で開く。
-        //※getWritableDatabase（書き込み可能状態でも読み込みはできる）
-        SQLiteDatabase d = dbHelper.getReadableDatabase();
-        //DBへクエリーを発行し、カーソルを取得する。
-        cursor = d.rawQuery(sql,null);
-        simpleCursorAdapter = new SimpleCursorAdapter
-                (this,db_layouts,cursor, headers, layouts,0);
-        listView.setAdapter(simpleCursorAdapter);
-        adapter.notifyDataSetChanged();
-    }
+
 }
 

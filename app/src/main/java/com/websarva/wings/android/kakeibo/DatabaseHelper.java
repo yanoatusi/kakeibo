@@ -61,6 +61,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 26,'支出','生活雑貨・日用品','文房具');");
         db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 27,'支出','生活雑貨・日用品','家具');");
         db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 28,'支出','生活雑貨・日用品','家電');");
+        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 29,'支出','遊興費','動画配信');");
+        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 30,'支出','遊興費','アプリ');");
         db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 29,'支出','美容費','理容院・美容院');");
         db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 30,'支出','美容費','エステ');");
         db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 31,'支出','美容費','化粧品・整髪料');");
