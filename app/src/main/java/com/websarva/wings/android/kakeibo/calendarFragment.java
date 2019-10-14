@@ -2,6 +2,7 @@ package com.websarva.wings.android.kakeibo;
 
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -55,6 +56,8 @@ PieChart _piechart;
 GridView _blankgrid;
 TextView _sumdp;
 TextView _sumdppiechart;
+    AlertDialog alertDlg;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -67,21 +70,33 @@ TextView _sumdppiechart;
 _piechart =view2.findViewById(R.id.y);
 _blankgrid = view.findViewById(R.id.gridView);
 _sumdp= view2.findViewById(R.id.subDp);
-_sumdppiechart= view2.findViewById(R.id.textView2);
+
 
         _cv.setOnDateChangeListener(this);
-        _sumdp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ChartDialogFragment dialog1 = new ChartDialogFragment();
-                dialog1.show(getFragmentManager(), "sample");
 
-            }
-        });
         textViewDateSum();
 
         calendarFrgListDisp();
         setupPieChart(_piechart);
+        _sumdp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDlg = new AlertDialog.Builder(getContext())
+                        .setView(_sumdp)
+                        .setPositiveButton(
+                                "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // OK ボタンクリック処理
+                                    }
+                                })
+                        .create();
+
+            }
+        });
+        float scalingFactor = 1.0f; // scale down to half the size
+        _piechart.setScaleX(scalingFactor);
+        _piechart.setScaleY(scalingFactor);
 textViewDateSumPieChart();
         return view2;
 
@@ -95,17 +110,16 @@ textViewDateSumPieChart();
             MainActivity mainActivity = (MainActivity) getActivity();
 
             _cv.setOnDateChangeListener(this);
-            _sumdp.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ChartDialogFragment dialog1 = new ChartDialogFragment();
-                    dialog1.show(getFragmentManager(), "sample");
 
-                }
-            });
             textViewDateSum();
             calendarFrgListDisp();
             setupPieChart(_piechart);
+            _piechart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
         }
 
     }
@@ -126,11 +140,9 @@ String ymonth;
             e.printStackTrace();
         }
         _cv.setOnDateChangeListener(this);
-        _sumdp.setOnClickListener(new View.OnClickListener() {
+        _piechart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ChartDialogFragment dialog1 = new ChartDialogFragment();
-                dialog1.show(getFragmentManager(), "sample");
 
             }
         });
@@ -176,7 +188,7 @@ String ymonth;
 
     }
     //日付ごとの合計をTextViewに表示
-    private void textViewDateSumPieChart(){
+    private String textViewDateSumPieChart(){
         MainActivity mainActivity = (MainActivity) getActivity();
         databaseHelperMonth = new DatabaseHelper(getActivity());
 
@@ -191,8 +203,7 @@ String ymonth;
         dateSumMonth.move(1);
 
         // TextViewを取得しデータベースの値を反映。
-        _sumdppiechart.setText(dateSumMonth.getString(0));
-
+        return dateSumMonth.getString(0);
     }
     private void calendarFrgListDisp(){
         MainActivity mainActivity = (MainActivity) getActivity();
@@ -236,9 +247,12 @@ String ymonth;
 
         //PieChartを取得する:
         PieChart piechart = (PieChart) view;
-        piechart.setData(data);
+        piechart.setCenterText("" +textViewDateSumPieChart()+"");
+        piechart.setCenterTextSize(18f);
         piechart.invalidate();
         piechart.setEntryLabelColor(Color.BLACK);
+        piechart.setEntryLabelTextSize(14f);
+        piechart.setData(data);
     }
     public String[] getContacts(){
         MainActivity mainActivity = (MainActivity) getActivity();
@@ -276,6 +290,14 @@ String ymonth;
         }
         cursor.close();
         return names.toArray(new String[names.size()]);
+    }
+    private class chartClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            float scalingFactor = 1.0f; // scale down to half the size
+            view.setScaleX(scalingFactor);
+            view.setScaleY(scalingFactor);
+        }
     }
 }
 
