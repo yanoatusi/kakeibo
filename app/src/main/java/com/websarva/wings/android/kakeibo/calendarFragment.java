@@ -81,17 +81,12 @@ _sumdp= view2.findViewById(R.id.subDp);
         _sumdp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alertDlg = new AlertDialog.Builder(getContext())
-                        .setView(_sumdp)
-                        .setPositiveButton(
-                                "OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // OK ボタンクリック処理
-                                    }
-                                })
-                        .create();
 
+                // ダイアログクラスをインスタンス化
+                ChartDialog dialog1 = new ChartDialog();
+                // 表示  getFagmentManager()は固定、sampleは識別タグ
+                dialog1.show(getFragmentManager(), "sample");
+                Log.d("wwww","rrr");
             }
         });
         float scalingFactor = 1.0f; // scale down to half the size
