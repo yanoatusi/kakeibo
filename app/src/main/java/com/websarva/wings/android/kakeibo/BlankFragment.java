@@ -189,6 +189,7 @@ public class BlankFragment extends Fragment {
         _nextDate.setOnClickListener(event);
 
         set_gridView();
+
 //        Category表示
         listcreatAdapter(_largeCotegoryList,"SELECT Category_Id as _id,Attributable_Type, Large_category FROM Category WHERE Attributable_Type = '支出' GROUP BY Large_category ORDER BY Category_Id",
                 new String[]{"Large_category"},new int[]{R.id.lcategory1},R.layout.category_list);

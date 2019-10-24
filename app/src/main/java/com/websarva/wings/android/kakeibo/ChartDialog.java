@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
+import android.view.View;
 
 public class ChartDialog extends DialogFragment {
     @Override
@@ -16,7 +17,7 @@ public class ChartDialog extends DialogFragment {
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-        builder.setView(inflater.inflate(R.layout.fragment_calendar, null))
+        builder.setView(inflater.inflate(R.layout.pei_chart,null ))
                 // Add action buttons
            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override

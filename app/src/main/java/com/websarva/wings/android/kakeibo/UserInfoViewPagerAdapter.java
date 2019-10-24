@@ -11,7 +11,7 @@ import com.websarva.wings.android.kakeibo.calendarFragment;
  */
 
 public class UserInfoViewPagerAdapter extends FragmentPagerAdapter {
-    private static final int PAGE_NUM = 2;
+    private static final int PAGE_NUM = 3;
 
     public UserInfoViewPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -24,9 +24,11 @@ public class UserInfoViewPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 fragment = new BlankFragment();
                 break;
-            default:
+            case 1:
                 fragment = new calendarFragment();
                 break;
+            case 2:
+                fragment = new PieChart();
         }
         return fragment;
     }

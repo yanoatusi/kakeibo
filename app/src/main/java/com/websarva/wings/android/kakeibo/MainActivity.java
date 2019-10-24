@@ -59,7 +59,7 @@ _gridView= findViewById(R.id.gridView);
         tabLayout.setupWithViewPager(pager);
         tabLayout.getTabAt(0).setText("ホーム");
         tabLayout.getTabAt(1).setText("カレンダー");
-
+        tabLayout.getTabAt(2).setText("グラフ");
     }
 
     public void onClickNext(View view) {
