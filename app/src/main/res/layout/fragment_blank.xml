@@ -15,7 +15,9 @@
         android:layout_marginBottom="5dp"
 
         android:background="@color/white"
-        android:numColumns="auto_fit" />
+        android:clickable="true"
+        android:numColumns="auto_fit"
+        android:scrollbars="vertical" />
 
 
 

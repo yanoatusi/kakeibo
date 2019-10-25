@@ -29,6 +29,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -189,7 +190,19 @@ public class BlankFragment extends Fragment {
         _nextDate.setOnClickListener(event);
 
         set_gridView();
+        _gridView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
 
+                return false;
+            }
+        });
+        _gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                Log.d("ABCD", "Position Single Click is " + position);
+            }
+        });
 //        Category表示
         listcreatAdapter(_largeCotegoryList,"SELECT Category_Id as _id,Attributable_Type, Large_category FROM Category WHERE Attributable_Type = '支出' GROUP BY Large_category ORDER BY Category_Id",
                 new String[]{"Large_category"},new int[]{R.id.lcategory1},R.layout.category_list);
@@ -529,7 +542,7 @@ Log.d("qwas",priceNote+"");
     public void set_gridView (){
         MainActivity mainActivity = (MainActivity) getActivity();//条件検索で使用する日付文字列
         //DBHelpderを作成する。この時にDBが作成される。
-        dbHelper = new DatabaseHelper(getActivity());
+        DatabaseHelper dbHelper = new DatabaseHelper(getActivity());
         //DBを読み込み可能状態で開く。
         //※getWritableDatabase（書き込み可能状態でも読み込みはできる）
         SQLiteDatabase d = dbHelper.getReadableDatabase();
@@ -546,7 +559,7 @@ Log.d("qwas",priceNote+"");
         int[] lay = {R.id.name,R.id.price,R.id.memo};
         int db_lay = R.layout.listrow;
         gridAdapter = new SimpleCursorAdapter
-                (getContext(),db_lay,gridcursor, head, lay,0);
+                (getActivity(),db_lay,gridcursor, head, lay,0);
 
         _gridView.setAdapter(gridAdapter);
 

@@ -158,9 +158,9 @@ String ymonth;
         com.github.mikephil.charting.charts.PieChart piechart = (com.github.mikephil.charting.charts.PieChart) view;
         piechart.setCenterText("" +textViewDateSumPieChart()+"");
         piechart.setCenterTextSize(18f);
-        piechart.invalidate();
+
         piechart.setEntryLabelColor(Color.BLACK);
-        piechart.setEntryLabelTextSize(14f);
+        piechart.setEntryLabelTextSize(16f);
         piechart.setData(data);
     }
     public String[] getContacts(){
