@@ -190,19 +190,30 @@ public class BlankFragment extends Fragment {
         _nextDate.setOnClickListener(event);
 
         set_gridView();
-        _gridView.setOnLongClickListener(new View.OnLongClickListener() {
+        _gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onLongClick(View v) {
-
-                return false;
-            }
-        });
-        _gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("ABCD", "Position Single Click is " + position);
+                MainActivity mainActivity = (MainActivity) getActivity();
+                DatabaseHelper dbHelper = new DatabaseHelper(getActivity());
+                SQLiteDatabase d = dbHelper.getReadableDatabase();
+                String sql = "DELETE _Id,Date,Small_category,Price,Memo FROM DatePrice "  +
+                        "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
+                        "WHERE Date =" +  "'" + mainActivity.getSqlDate() + "'"+
+                        "AND _Id ="+  "'" + (position+1) + "'";
+                Cursor cursor1 = d.rawQuery(sql,null);
+                String[] head = {"Small_category","Price","Memo"};
+                int[] lay = {R.id.name,R.id.price,R.id.memo};
+                int db_lay = R.layout.listrow;
+                gridAdapter = new SimpleCursorAdapter
+                        (getActivity(),db_lay,cursor1, head, lay,0);
+
+                _gridView.setAdapter(gridAdapter);
+
+                return true;
             }
         });
+
 //        Category表示
         listcreatAdapter(_largeCotegoryList,"SELECT Category_Id as _id,Attributable_Type, Large_category FROM Category WHERE Attributable_Type = '支出' GROUP BY Large_category ORDER BY Category_Id",
                 new String[]{"Large_category"},new int[]{R.id.lcategory1},R.layout.category_list);

@@ -21,11 +21,5 @@
         app:tabTextColor="@color/black"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true" />
-    <GridView
-        android:id="@+id/gridView"
-        android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:layout_weight="1"
-        android:entries="@array/num"
-        android:numColumns="2" />
+
 </RelativeLayout>

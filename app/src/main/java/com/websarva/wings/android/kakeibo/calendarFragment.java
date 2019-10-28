@@ -78,17 +78,6 @@ _sumdp= view2.findViewById(R.id.subDp);
 
         calendarFrgListDisp();
         setupPieChart(_piechart);
-        _sumdp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                // ダイアログクラスをインスタンス化
-                ChartDialog dialog1 = new ChartDialog();
-                // 表示  getFagmentManager()は固定、sampleは識別タグ
-                dialog1.show(getFragmentManager(), "sample");
-                Log.d("wwww","rrr");
-            }
-        });
         float scalingFactor = 1.0f; // scale down to half the size
         _piechart.setScaleX(scalingFactor);
         _piechart.setScaleY(scalingFactor);
