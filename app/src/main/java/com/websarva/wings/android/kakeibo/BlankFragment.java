@@ -195,21 +195,12 @@ public class BlankFragment extends Fragment {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("ABCD", "Position Single Click is " + position);
                 MainActivity mainActivity = (MainActivity) getActivity();
-                DatabaseHelper dbHelper = new DatabaseHelper(getActivity());
-                SQLiteDatabase d = dbHelper.getReadableDatabase();
-                String sql = "DELETE _Id,Date,Small_category,Price,Memo FROM DatePrice "  +
+                String sql = "SELECT _Id,Date,Small_category,Price,Memo FROM DatePrice "  +
                         "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
-                        "WHERE Date =" +  "'" + mainActivity.getSqlDate() + "'"+
-                        "AND _Id ="+  "'" + (position+1) + "'";
-                Cursor cursor1 = d.rawQuery(sql,null);
-                String[] head = {"Small_category","Price","Memo"};
-                int[] lay = {R.id.name,R.id.price,R.id.memo};
-                int db_lay = R.layout.listrow;
-                gridAdapter = new SimpleCursorAdapter
-                        (getActivity(),db_lay,cursor1, head, lay,0);
-
-                _gridView.setAdapter(gridAdapter);
-
+                        "WHERE Date =" +  "'" + mainActivity.getSqlDate() + "'";
+               DialogFragment dialog1 = new DialogFragment();
+                // 表示  getFagmentManager()は固定、sampleは識別タグ
+                dialog1.show(getFragmentManager(), "sample");
                 return true;
             }
         });
@@ -348,7 +339,7 @@ public class BlankFragment extends Fragment {
                     Log.d("price",priceNote + "");
                     Log.d("categoryid",categoryIdSave + "");
 
-//                DatePriceStmt.bindLong(1, _DatePriceId=_DatePriceId+ 1);
+//               DatePriceStmt.bindLong(1, id);
                     DatePriceStmt.bindString(2, mainActivity.getSqlDate());
 
                     DatePriceStmt.bindLong(3, priceNote * _priceType);
