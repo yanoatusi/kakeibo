@@ -4,6 +4,7 @@ package com.websarva.wings.android.kakeibo;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,6 +15,7 @@ import android.provider.ContactsContract;
 import android.support.design.bottomappbar.BottomAppBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -188,19 +190,38 @@ public class BlankFragment extends Fragment {
         };
         _backDate.setOnClickListener(event);
         _nextDate.setOnClickListener(event);
-
+        int a=0;
         set_gridView();
         _gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 Log.d("ABCD", "Position Single Click is " + position);
-                MainActivity mainActivity = (MainActivity) getActivity();
-                String sql = "SELECT _Id,Date,Small_category,Price,Memo FROM DatePrice "  +
-                        "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
-                        "WHERE Date =" +  "'" + mainActivity.getSqlDate() + "'";
-               DialogFragment dialog1 = new DialogFragment();
-                // 表示  getFagmentManager()は固定、sampleは識別タグ
-                dialog1.show(getFragmentManager(), "sample");
+
+                    new AlertDialog.Builder(getActivity())
+                        .setTitle("削除しますか？")
+                        //.setMessage("削除しますか？")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // OK button pressed
+                                MainActivity mainActivity = (MainActivity) getActivity();
+                                //DBHelpderを作成する。この時にDBが作成される。
+                                DatabaseHelper dbHelper = new DatabaseHelper(getActivity());
+                                //DBを読み込み可能状態で開く。
+                                //※getWritableDatabase（書き込み可能状態でも読み込みはできる）
+                                SQLiteDatabase d = dbHelper.getReadableDatabase();
+                                //DBへクエリーを発行し、カーソルを取得する。
+                                String sql = "DELETE FROM DatePrice " +
+                                        "WHERE Date =" +  "'" + mainActivity.getSqlDate() + "'" +
+                                        "AND _id = (SELECT _id FROM DatePrice LIMIT 1 OFFSET" +  "'" + position + "'"+")";
+//                                d.execSQL(sql);
+                                d.delete("DatePrice","Date =" +  "'" + mainActivity.getSqlDate() + "'",null);
+
+                                set_gridView();
+                            }
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .show();
                 return true;
             }
         });

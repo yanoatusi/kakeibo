@@ -11,6 +11,14 @@ public class DialogFragment extends android.support.v4.app.DialogFragment {
         return new AlertDialog.Builder(getActivity())
                 .setTitle("タイトル")
                 .setMessage("削除しますか")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // OK button pressed
+
+                    }
+                })
+                .setNegativeButton("Cancel", null)
                 .create();
     }
 
