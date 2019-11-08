@@ -214,8 +214,8 @@ public class BlankFragment extends Fragment {
                                 String sql = "DELETE FROM DatePrice " +
                                         "WHERE Date =" +  "'" + mainActivity.getSqlDate() + "'" +
                                         "AND _id = (SELECT _id FROM DatePrice LIMIT 1 OFFSET" +  "'" + position + "'"+")";
-//                                d.execSQL(sql);
-                                d.delete("DatePrice","Date =" +  "'" + mainActivity.getSqlDate() + "'",null);
+                                d.execSQL(sql);
+//                                d.delete("DatePrice","Date = ?",new String[]{mainActivity.getSqlDate()});
 
                                 set_gridView();
                             }
@@ -360,7 +360,8 @@ public class BlankFragment extends Fragment {
                     Log.d("price",priceNote + "");
                     Log.d("categoryid",categoryIdSave + "");
 
-//               DatePriceStmt.bindLong(1, id);
+//               DatePriceStmt.bindLong(1, _id);
+
                     DatePriceStmt.bindString(2, mainActivity.getSqlDate());
 
                     DatePriceStmt.bindLong(3, priceNote * _priceType);
