@@ -26,9 +26,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 @SuppressWarnings("NullableProblems")
 public class BlankFragment extends Fragment {
     /**
