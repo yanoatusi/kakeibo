@@ -2,7 +2,6 @@ package com.websarva.wings.android.kakeibo;
 
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -13,20 +12,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
-
-import java.sql.ResultSet;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,7 +29,6 @@ import java.util.List;
 
 public class calendarFragment extends Fragment implements CalendarView.OnDateChangeListener {
 
-    SQLiteDatabase calendarFrgDb;
     private DatabaseHelper calendarFrgDbHelper;
     Cursor calendarFrgCursor=null;
     SimpleCursorAdapter calendarFrgAdapter;
@@ -52,11 +45,9 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
     TextView _dateSum;
     CalendarView _cv;
     DatabaseHelper FrgDbHelper;
-PieChart _piechart;
-GridView _blankgrid;
-TextView _sumdp;
-TextView _sumdppiechart;
-    AlertDialog alertDlg;
+    PieChart _piechart;
+    GridView _blankgrid;
+    TextView _sumdp;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,21 +58,17 @@ TextView _sumdppiechart;
         _calendarFrgList = (ListView) view2.findViewById(R.id.list);
         _dateSum = view2.findViewById(R.id.subDp);
         _cv = (CalendarView) view2.findViewById(R.id.calendarView1);
-_piechart =view2.findViewById(R.id.y);
-_blankgrid = view.findViewById(R.id.gridView);
-_sumdp= view2.findViewById(R.id.subDp);
+        _piechart =view2.findViewById(R.id.y);
+        _blankgrid = view.findViewById(R.id.gridView);
+        _sumdp= view2.findViewById(R.id.subDp);
 
+            _cv.setOnDateChangeListener(this);
 
-        _cv.setOnDateChangeListener(this);
+            textViewDateSum();
 
-        textViewDateSum();
-
-        calendarFrgListDisp();
-        setupPieChart(_piechart);
-        float scalingFactor = 1.0f; // scale down to half the size
-        _piechart.setScaleX(scalingFactor);
-        _piechart.setScaleY(scalingFactor);
-textViewDateSumPieChart();
+            calendarFrgListDisp();
+            setupPieChart(_piechart);
+            textViewDateSumPieChart();
         return view2;
 
     }
@@ -90,8 +77,6 @@ textViewDateSumPieChart();
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-
-            MainActivity mainActivity = (MainActivity) getActivity();
 
             _cv.setOnDateChangeListener(this);
 
@@ -107,7 +92,7 @@ textViewDateSumPieChart();
         }
 
     }
-String ymonth;
+    String ymonth;
     public void onSelectedDayChange(CalendarView view, int year, int month,
                                     int dayOfMonth) {
 

@@ -50,11 +50,6 @@ import com.websarva.wings.android.kakeibo.R;
 @SuppressWarnings("NullableProblems")
 public class BlankFragment extends Fragment {
     /**
-     * 選択されたカクテルの主キーIDを表すフィールド。
-     */
-    int _DatePriceId = -1;
-    int _CategoryId = -1;
-    /**
      * 選択されたカクテル名を表すフィールド。
      */
     String _cocktailName = "";
@@ -83,13 +78,11 @@ public class BlankFragment extends Fragment {
     Button _nextDate;
 
     ListView _calendarFrgList;
-    CalendarView _calendar;
 
     GridView _gridView;
 
     //カテゴリーリスト
     private DatabaseHelper dbHelper;
-    SQLiteDatabase db;
     Cursor gridcursor=null;
     Cursor cursor=null;
     Cursor cursor2=null;
@@ -106,12 +99,6 @@ public class BlankFragment extends Fragment {
     //+-切り替え変数
     private int _priceType;
 
-    //
-    SQLiteDatabase calendarFrgDb;
-    private DatabaseHelper calendarFrgDbHelper;
-    Cursor calendarFrgCursor=null;
-    SimpleCursorAdapter calendarFrgAdapter;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -121,7 +108,6 @@ public class BlankFragment extends Fragment {
 
         //
         _calendarFrgList = (ListView) view2.findViewById(R.id.list);
-
         _gridView = (GridView) view.findViewById(R.id.gridView);
         _tvCocktailName = view.findViewById(R.id.tvCocktailName);
         _typePrice = view.findViewById(R.id.typePrice);
@@ -139,7 +125,6 @@ public class BlankFragment extends Fragment {
 
         MainActivity mainActivity = (MainActivity) getActivity();
         // idが_nowDatenのButtonを取得
-
         mainActivity.setNowDate(_nowDate);
         mainActivity.setSqlDate(_nowDate.getText().toString());
         Log.d("BlankFrg_getSqlDate1",mainActivity.getSqlDate()+"");
@@ -190,8 +175,9 @@ public class BlankFragment extends Fragment {
         };
         _backDate.setOnClickListener(event);
         _nextDate.setOnClickListener(event);
-        int a=0;
+
         set_gridView();
+
         _gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -215,7 +201,6 @@ public class BlankFragment extends Fragment {
                                         "WHERE Date =" +  "'" + mainActivity.getSqlDate() + "'" +
                                         "AND _id = (SELECT _id FROM DatePrice LIMIT 1 OFFSET" +  "'" + position + "'"+")";
                                 d.execSQL(sql);
-//                                d.delete("DatePrice","Date = ?",new String[]{mainActivity.getSqlDate()});
 
                                 set_gridView();
                             }
@@ -248,9 +233,7 @@ public class BlankFragment extends Fragment {
         });
         _largeCotegoryList.setAdapter(_saveAdapter);
 
-//        listcreatAdapter(_largeCotegoryList,"SELECT rowid as _id, Large_category FROM Category GROUP BY Large_category",
-//                new String[]{"Large_category"},new int[]{R.id.lcategory1},R.layout.category_list);
-        //LargeCotegory文字列からSmallCategory文字列の表示
+      //LargeCotegory文字列からSmallCategory文字列の表示
         _largeCotegoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View viewnull, int position, long id) {
 
@@ -271,10 +254,6 @@ public class BlankFragment extends Fragment {
                 int db_layout2 = R.layout.small_category_list;
                 CategoryAdapter2 = new SimpleCursorAdapter
                         (view.getContext(),db_layout2,cursor2, headers2, layouts2,0);
-
-//                listcreatAdapter(_smallCategoryList,"SELECT Category_id as _id, Large_category, Small_category FROM Category " +
-//                                "WHERE Large_category =" +  "'" + currentId + "'",
-//                        new String[]{"Small_category"},new int[]{R.id.SmallCategorylist2},R.layout.small_category_list);
 
                 CategoryAdapter2.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
                     @Override
@@ -335,41 +314,25 @@ public class BlankFragment extends Fragment {
                     //まず、リストで選択されたカクテルのメモデータを削除。その後インサートを行う。
                     //削除用SQL文字列を用意。
                     String sqlDeleteDatePrice = "DELETE FROM DatePrice WHERE _Id = ?";
-//                    String sqlDeleteCategory = "DELETE FROM Category WHERE Category_Id = ?";
-                    //SQL文字列を元にプリペアドステートメントを取得。
                     SQLiteStatement DatePriceStmt = db.compileStatement(sqlDeleteDatePrice);
-//                    SQLiteStatement CategoryStmt = db.compileStatement(sqlDeleteCategory);
-                    //変数のバイド。
-//                    DatePriceStmt.bindLong(1, _DatePriceId);
-//                    CategoryStmt.bindLong(1, _CategoryId);
-                    //削除SQLの実行。
                     DatePriceStmt.executeUpdateDelete();
-//                    CategoryStmt.executeUpdateDelete();
-
                     //インサート用SQL文字列の用意。
                     String DatePriceInsert = "INSERT INTO DatePrice (_id, Date, Price, Category_Id, Memo)" +
                             " VALUES (?, ?, ?, ?, ?)";
-//                    String CategoryInsert = "INSERT INTO Category (Category_Id, Attributable_Type," +
-//                            " Large_category, Small_category)" + " VALUES (?, ?, ?, ?)";
                     //SQL文字列を元にプリペアドステートメントを取得。
                     DatePriceStmt = db.compileStatement(DatePriceInsert);
-
-//                    CategoryStmt = db.compileStatement(CategoryInsert);
                     //変数のバイド。
 
                     Log.d("price",priceNote + "");
                     Log.d("categoryid",categoryIdSave + "");
 
-//               DatePriceStmt.bindLong(1, _id);
+//                    DatePriceStmt.bindLong(1, _id);
 
                     DatePriceStmt.bindString(2, mainActivity.getSqlDate());
 
                     DatePriceStmt.bindLong(3, priceNote * _priceType);
                     DatePriceStmt.bindLong(4, categoryIdSave);
                     DatePriceStmt.bindString(5, memoNote);
-
-//                    CategoryStmt.bindLong(1,_CategoryId);
-//                    CategoryStmt.bindString(2, _cocktailName);
 
                     //インサートSQLの実行。
                     DatePriceStmt.executeInsert();
@@ -378,10 +341,9 @@ public class BlankFragment extends Fragment {
                     //データベース接続オブジェクトの解放。
                     db.close();
                 }
-//                _tvCocktailName.setText(_tvCocktailName.getText().toString());
 
                 _typePrice.setText("");
-Log.d("qwas",priceNote+"");
+                Log.d("qwas",priceNote+"");
                 //+-切替変数の初期化
                 //データベースヘルパーオブジェクトを作成。
                 helper = new DatabaseHelper(getActivity());
@@ -429,16 +391,12 @@ Log.d("qwas",priceNote+"");
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            //タップされた行番号をフィールドの主キーIDに代入。
-//            _DatePriceId = position;
                 //タップされた行のデータを取得。これがカクテル名となるので、フィールドに代入。
                 _cocktailName = (String) cursor2.getString(cursor2.getColumnIndex("Small_category"));
                     Log.d("qqqw",_cocktailName+"");
                 //カクテル名を表示するTextViewに表示カクテル名を設定。
                 _tvCocktailName.setText(_cocktailName);
 
-//            categoryCursol = categoryDb.query("Category", new String[]{"Category_Id"}
-//                    ,"Small_category=?", new String[]{_cocktailName}, null, null, null);
             categoryIdSave = Integer.parseInt(cursor2.getString(cursor2.getColumnIndex("_id")));
             Log.d("categoryid",categoryIdSave + "");
 
@@ -525,10 +483,8 @@ Log.d("qwas",priceNote+"");
     }
     public void replayDatabase() {
         MainActivity mainActivity = (MainActivity) getActivity();
-        //条件検索で使用する日付文字列
         //DBHelpderを作成する。この時にDBが作成される。
         dbHelper = new DatabaseHelper(getActivity());
-        //DBを読み込み可能状態で開く。
         //※getWritableDatabase（書き込み可能状態でも読み込みはできる）
         SQLiteDatabase d = dbHelper.getReadableDatabase();
         //DBへクエリーを発行し、カーソルを取得する。
@@ -536,8 +492,6 @@ Log.d("qwas",priceNote+"");
                 "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
                 "WHERE Date =" +  "'" + mainActivity.getSqlDate() + "'";
         gridcursor = d.rawQuery(sql,null);
-//                d.query("DatePrice", new String[]{"Category_Id as _id", "Price"}
-//                ,null, null, null, null, null);
         //取得したカーソルをカーソル用のアダプターに設定する。
         String[] head = {"Small_category","Price","Memo"};
         int[] lay = {R.id.name,R.id.price,R.id.memo};
@@ -576,8 +530,6 @@ Log.d("qwas",priceNote+"");
                 "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
                 "WHERE Date =" +  "'" + mainActivity.getSqlDate() + "'";
         gridcursor = d.rawQuery(sql,null);
-//                d.query("DatePrice", new String[]{"Category_Id as _id", "Price"}
-//                ,null, null, null, null, null);
         //取得したカーソルをカーソル用のアダプターに設定する。
         String[] head = {"Small_category","Price","Memo"};
         int[] lay = {R.id.name,R.id.price,R.id.memo};

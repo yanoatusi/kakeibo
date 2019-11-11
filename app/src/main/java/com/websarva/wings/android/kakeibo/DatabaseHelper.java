@@ -46,7 +46,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 10,'支出','固定費','教育');");
         db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 12,'支出','交通費','電車');");
         db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 13,'支出','交通費','バス');");
-        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 14,'支出','交通費','ガソリン');");
+        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 14,'支出','交通費','車');");
         db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 15,'支出','交通費','タクシー');");
         db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 16,'支出','交通費','飛行機');");
         db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 17,'支出','食費','食料品');");
@@ -76,12 +76,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 39,'支出','特別支出','冠婚葬祭');");
         db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 40,'支出','その他支出','娯楽');");
         db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 41,'支出','その他支出','その他');");
-        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 42,'収入','中古品販売','フリマ');");
-        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 43,'収入','中古品販売','オークション');");
-        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 44,'収入','給料・年金','固定給');");
-        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 45,'収入','給料・年金','ボーナス');");
-        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 46,'収入','給料・年金','パート・アルバイト');");
-        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 47,'収入','給料・年金','年金');");
+//        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 42,'収入','中古品販売','フリマ');");
+//        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 43,'収入','中古品販売','オークション');");
+//        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 44,'収入','給料・年金','固定給');");
+//        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 45,'収入','給料・年金','ボーナス');");
+//        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 46,'収入','給料・年金','パート・アルバイト');");
+//        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 47,'収入','給料・年金','年金');");
 
     }
 

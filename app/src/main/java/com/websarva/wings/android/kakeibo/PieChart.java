@@ -30,28 +30,11 @@ import java.util.List;
 
 public class PieChart extends Fragment implements CalendarView.OnDateChangeListener {
 
-    SQLiteDatabase calendarFrgDb;
-    private DatabaseHelper calendarFrgDbHelper;
-    Cursor calendarFrgCursor=null;
-    SimpleCursorAdapter calendarFrgAdapter;
-
-    SQLiteDatabase dateSumDb;
-    private DatabaseHelper dateSumDbHelper;
-    Cursor dateSumCursor=null;
     SQLiteDatabase dateSumDbMonth;
     private DatabaseHelper databaseHelperMonth;
     Cursor dateSumMonth=null;
-    SimpleCursorAdapter dateSumAdapter;
-
-    ListView _calendarFrgList;
-    TextView _dateSum;
-    CalendarView _cv;
     DatabaseHelper FrgDbHelper;
-com.github.mikephil.charting.charts.PieChart _piechart;
-GridView _blankgrid;
-TextView _sumdp;
-TextView _sumdppiechart;
-    AlertDialog alertDlg;
+    com.github.mikephil.charting.charts.PieChart _piechart;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -199,14 +182,6 @@ String ymonth;
         }
         cursor.close();
         return names.toArray(new String[names.size()]);
-    }
-    private class chartClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            float scalingFactor = 1.0f; // scale down to half the size
-            view.setScaleX(scalingFactor);
-            view.setScaleY(scalingFactor);
-        }
     }
 }
 

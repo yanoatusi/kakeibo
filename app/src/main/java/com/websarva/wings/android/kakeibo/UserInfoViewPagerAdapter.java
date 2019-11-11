@@ -29,6 +29,7 @@ public class UserInfoViewPagerAdapter extends FragmentPagerAdapter {
                 break;
             case 2:
                 fragment = new PieChart();
+                break;
         }
         return fragment;
     }
