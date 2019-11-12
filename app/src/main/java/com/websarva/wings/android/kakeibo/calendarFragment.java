@@ -218,7 +218,6 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
         PieChart piechart = (PieChart) view;
         piechart.setCenterText("" +textViewDateSumPieChart()+"");
         piechart.setCenterTextSize(18f);
-
         piechart.setEntryLabelColor(Color.BLACK);
         piechart.setEntryLabelTextSize(16f);
         piechart.setData(data);
@@ -259,14 +258,6 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
         }
         cursor.close();
         return names.toArray(new String[names.size()]);
-    }
-    private class chartClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            float scalingFactor = 1.0f; // scale down to half the size
-            view.setScaleX(scalingFactor);
-            view.setScaleY(scalingFactor);
-        }
     }
 }
 

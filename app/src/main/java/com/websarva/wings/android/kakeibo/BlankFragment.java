@@ -181,6 +181,8 @@ public class BlankFragment extends Fragment {
                                         "AND _id = (SELECT _id FROM DatePrice LIMIT 1 OFFSET" +  "'" + position + "'"+")";
                                 d.execSQL(sql);
 
+
+
                                 set_gridView();
                             }
                         })
