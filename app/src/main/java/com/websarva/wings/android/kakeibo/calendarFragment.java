@@ -52,14 +52,13 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_blank, container, false);
         View view2 = inflater.inflate(R.layout.fragment_calendar, container, false);
 
         _calendarFrgList = (ListView) view2.findViewById(R.id.list);
         _dateSum = view2.findViewById(R.id.subDp);
         _cv = (CalendarView) view2.findViewById(R.id.calendarView1);
         _piechart =view2.findViewById(R.id.y);
-        _blankgrid = view.findViewById(R.id.gridView);
+        _blankgrid = getActivity().findViewById(R.id.gridView);
         _sumdp= view2.findViewById(R.id.subDp);
 
             _cv.setOnDateChangeListener(this);
@@ -222,6 +221,7 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
         piechart.setEntryLabelTextSize(16f);
         piechart.setData(data);
     }
+
     public String[] getContacts(){
         MainActivity mainActivity = (MainActivity) getActivity();
         FrgDbHelper = new DatabaseHelper(getActivity());

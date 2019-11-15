@@ -62,6 +62,7 @@ public class BlankFragment extends Fragment {
 
     //カテゴリーリスト
     private DatabaseHelper dbHelper;
+    private DatabaseHelper Helper;
     Cursor gridcursor=null;
     Cursor cursor=null;
     Cursor cursor2=null;
@@ -82,11 +83,10 @@ public class BlankFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_blank, container, false);
-        final View view2 = inflater.inflate(R.layout.fragment_calendar, container, false);
         super.onCreate(savedInstanceState);
 
         //
-        _calendarFrgList = (ListView) view2.findViewById(R.id.list);
+        _calendarFrgList = (ListView) getActivity().findViewById(R.id.list);
         _gridView = (GridView) view.findViewById(R.id.gridView);
         _tvCocktailName = view.findViewById(R.id.tvCocktailName);
         _typePrice = view.findViewById(R.id.typePrice);
@@ -501,25 +501,26 @@ public class BlankFragment extends Fragment {
     public void set_gridView (){
         MainActivity mainActivity = (MainActivity) getActivity();//条件検索で使用する日付文字列
         //DBHelpderを作成する。この時にDBが作成される。
-        DatabaseHelper dbHelper = new DatabaseHelper(getActivity());
+        Helper = new DatabaseHelper(getActivity());
         //DBを読み込み可能状態で開く。
         //※getWritableDatabase（書き込み可能状態でも読み込みはできる）
-        SQLiteDatabase d = dbHelper.getReadableDatabase();
+        SQLiteDatabase d = Helper.getReadableDatabase();
         //DBへクエリーを発行し、カーソルを取得する。
 
         String sql = "SELECT _Id,Date,Small_category,Price,Memo FROM DatePrice "  +
                 "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
                 "WHERE Date =" +  "'" + mainActivity.getSqlDate() + "'";
+        Log.d("zxy",mainActivity.getSqlDate());
         gridcursor = d.rawQuery(sql,null);
         //取得したカーソルをカーソル用のアダプターに設定する。
         String[] head = {"Small_category","Price","Memo"};
         int[] lay = {R.id.name,R.id.price,R.id.memo};
         int db_lay = R.layout.listrow;
         gridAdapter = new SimpleCursorAdapter
-                (getActivity(),db_lay,gridcursor, head, lay,0);
+                (getContext(),db_lay,gridcursor, head, lay,0);
 
         _gridView.setAdapter(gridAdapter);
-
+        gridAdapter.notifyDataSetChanged();
         Log.d("sqla"," ");
     }
 }
