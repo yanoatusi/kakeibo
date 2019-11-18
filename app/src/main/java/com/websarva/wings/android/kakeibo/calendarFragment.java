@@ -82,12 +82,6 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
             textViewDateSum();
             calendarFrgListDisp();
             setupPieChart(_piechart);
-            _piechart.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
         }
 
     }
@@ -108,12 +102,7 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
             e.printStackTrace();
         }
         _cv.setOnDateChangeListener(this);
-        _piechart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
-        });
         textViewDateSum();
         calendarFrgListDisp();
         setupPieChart(_piechart);

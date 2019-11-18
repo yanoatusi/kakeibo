@@ -181,8 +181,6 @@ public class BlankFragment extends Fragment {
                                         "AND _id = (SELECT _id FROM DatePrice LIMIT 1 OFFSET" +  "'" + position + "'"+")";
                                 d.execSQL(sql);
 
-
-
                                 set_gridView();
                             }
                         })
@@ -440,7 +438,7 @@ public class BlankFragment extends Fragment {
                     replayDatabase();
                     break;
                 case R.id.typePrice:
-                    if (! inputStr.toString().equals("")) {
+                    if (! inputStr.equals("")) {
                         if (! _tvCocktailName.getText().toString().equals("選択項目")){
                             Log.d("sddd",_tvCocktailName.getText().toString());
                             _btnSave.setEnabled(true);
@@ -450,7 +448,7 @@ public class BlankFragment extends Fragment {
                     }
                     break;
                 case R.id.tvCocktailName:
-                    if (! inputStr.toString().equals("")) {
+                    if (! inputStr.equals("")) {
                         if (! _typePrice.getText().toString().equals("")){
                             Log.d("sddd",_typePrice.getText().toString());
                             _btnSave.setEnabled(true);
@@ -502,7 +500,6 @@ public class BlankFragment extends Fragment {
         MainActivity mainActivity = (MainActivity) getActivity();//条件検索で使用する日付文字列
         //DBHelpderを作成する。この時にDBが作成される。
         Helper = new DatabaseHelper(getActivity());
-        //DBを読み込み可能状態で開く。
         //※getWritableDatabase（書き込み可能状態でも読み込みはできる）
         SQLiteDatabase d = Helper.getReadableDatabase();
         //DBへクエリーを発行し、カーソルを取得する。
