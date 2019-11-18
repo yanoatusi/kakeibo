@@ -1,17 +1,13 @@
 package com.websarva.wings.android.kakeibo;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CalendarView;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.TextView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,11 +34,6 @@ public class MainActivity extends AppCompatActivity   {
         tabLayout.getTabAt(0).setText("ホーム");
         tabLayout.getTabAt(1).setText("カレンダー");
         tabLayout.getTabAt(2).setText("グラフ");
-    }
-
-    public void onClickNext(View view) {
-        currentPage ++;
-        pager.setCurrentItem(currentPage);
     }
     public EditText set_nowDate(){
         EditText editText = findViewById(R.id.nowDate);
