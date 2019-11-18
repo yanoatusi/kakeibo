@@ -130,9 +130,11 @@ public class BlankFragment extends Fragment {
                 switch (backNext.getId()) {
                     case R.id.backDate:
                         calendar.add(Calendar.DAY_OF_MONTH, -1);
+                        set_gridView();
                         break;
                     case R.id.nextDate:
                         calendar.add(Calendar.DAY_OF_MONTH, +1);
+                        set_gridView();
                         break;
                 }
 
