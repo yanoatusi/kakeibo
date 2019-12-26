@@ -178,11 +178,13 @@ public class BlankFragment extends Fragment {
                                 //※getWritableDatabase（書き込み可能状態でも読み込みはできる）
                                 SQLiteDatabase d = dbHelper.getReadableDatabase();
                                 //DBへクエリーを発行し、カーソルを取得する。
-                                String sql = "DELETE FROM DatePrice " +
-                                        "WHERE Date =" +  "'" + mainActivity.getSqlDate() + "'" +
-                                        "AND _id = (SELECT _id FROM DatePrice LIMIT 1 OFFSET" +  "'" + position + "'"+")";
-                                d.execSQL(sql);
-
+//                                String sql = "DELETE FROM DatePrice " +
+//                                        "WHERE Date =" +  "'" + mainActivity.getSqlDate() + "'" +
+//                                        "AND _id = (SELECT _id FROM DatePrice LIMIT 1 OFFSET" +  "'" + position + "'"+")";
+//                                d.execSQL(sql);
+                                d.delete("DatePrice","Date =" +  "'" + mainActivity.getSqlDate() + "'"+
+                                        "AND _id = (SELECT _id FROM DatePrice where Date ="+  "'" + mainActivity.getSqlDate() + "'" +
+                                    " LIMIT 1 OFFSET" +  "'" + position + "'"+")",null);
                                 set_gridView();
                             }
                         })
