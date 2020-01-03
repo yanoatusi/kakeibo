@@ -102,11 +102,12 @@ public class BlankFragment extends Fragment {
         _nextDate = (Button) view.findViewById(R.id.nextDate);
 
 
-        MainActivity mainActivity = (MainActivity) getActivity();
+         MainActivity mainActivity = (MainActivity) getActivity();
         // idが_nowDatenのButtonを取得
         mainActivity.setNowDate(_nowDate);
         mainActivity.setSqlDate(_nowDate.getText().toString());
         Log.d("BlankFrg_getSqlDate1",mainActivity.getSqlDate()+"");
+
         // clickイベント追加
         _nowDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,7 +184,7 @@ public class BlankFragment extends Fragment {
 //                                        "AND _id = (SELECT _id FROM DatePrice LIMIT 1 OFFSET" +  "'" + position + "'"+")";
 //                                d.execSQL(sql);
                                 d.delete("DatePrice","Date =" +  "'" + mainActivity.getSqlDate() + "'"+
-                                        "AND _id = (SELECT _id FROM DatePrice where Date ="+  "'" + mainActivity.getSqlDate() + "'" +
+                                        "AND _id = (SELECT _id FROM DatePrice WHERE Date ="+  "'" + mainActivity.getSqlDate() + "'" +
                                     " LIMIT 1 OFFSET" +  "'" + position + "'"+")",null);
                                 set_gridView();
                             }
@@ -282,10 +283,12 @@ public class BlankFragment extends Fragment {
              */
             @Override
             public void onClick(View view1) {
-                MainActivity mainActivity = (MainActivity) getActivity();
-                //入力された金額を取得。
-                int priceNote = Integer.parseInt(_typePrice.getText().toString());
 
+                //入力された金額を取得。
+                MainActivity mainActivity = (MainActivity) getActivity();
+                int priceNote = Integer.parseInt(_typePrice.getText().toString());
+                mainActivity.setSqlDate(_nowDate.getText().toString());
+                String a = mainActivity.getSqlDate();
                 String memoNote =  _memoNote.getText().toString();
 
                 //データベースヘルパーオブジェクトを作成。
@@ -308,10 +311,10 @@ public class BlankFragment extends Fragment {
 
                     Log.d("price",priceNote + "");
                     Log.d("categoryid",categoryIdSave + "");
-
+                    Log.d("mainq",mainActivity.getSqlDate());
 //                    DatePriceStmt.bindLong(1, _id);
 
-                    DatePriceStmt.bindString(2, mainActivity.getSqlDate());
+                    DatePriceStmt.bindString(2, a);
 
                     DatePriceStmt.bindLong(3, priceNote * _priceType);
                     DatePriceStmt.bindLong(4, categoryIdSave);
