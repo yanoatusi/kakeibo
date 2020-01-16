@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -49,10 +50,12 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
     GridView _blankgrid;
     TextView _sumdp;
 
+    EditText _nowDate;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view2 = inflater.inflate(R.layout.fragment_calendar, container, false);
+        View view = inflater.inflate(R.layout.fragment_blank, container, false);
 
         _calendarFrgList = (ListView) view2.findViewById(R.id.list);
         _dateSum = view2.findViewById(R.id.subDp);
@@ -60,12 +63,15 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
         _piechart =view2.findViewById(R.id.y);
         _blankgrid = getActivity().findViewById(R.id.gridView);
         _sumdp= view2.findViewById(R.id.subDp);
+        _nowDate = view.findViewById(R.id.nowDate);
 
-            _cv.setOnDateChangeListener(this);
+
+        _cv.setOnDateChangeListener(this);
 
             textViewDateSum();
 
             calendarFrgListDisp();
+        Log.d("sddd",  "aaa");
             setupPieChart(_piechart);
             textViewDateSumPieChart();
         return view2;
@@ -80,8 +86,11 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
             _cv.setOnDateChangeListener(this);
 
             textViewDateSum();
+
             calendarFrgListDisp();
             setupPieChart(_piechart);
+            textViewDateSumPieChart();
+
         }
 
     }
@@ -101,12 +110,18 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        _cv.setOnDateChangeListener(this);
-
+_cv.setOnDateChangeListener(this);
+Log.d("afa",_cv.getDate()+"");
         textViewDateSum();
         calendarFrgListDisp();
+
         setupPieChart(_piechart);
+        textViewDateSumPieChart();
     }
+
+
+
+
 
     /**
      * 日付文字列をlong値に変換する
@@ -160,7 +175,9 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
         dateSumMonth.move(1);
 
         // TextViewを取得しデータベースの値を反映。
-        return dateSumMonth.getString(0);
+        Log.d("cfc",dateSumMonth.getString(0)+"");
+            return dateSumMonth.getString(0);
+
     }
     private void calendarFrgListDisp(){
         MainActivity mainActivity = (MainActivity) getActivity();
@@ -204,7 +221,8 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
 
         //PieChartを取得する:
         PieChart piechart = (PieChart) view;
-        piechart.setCenterText("" +textViewDateSumPieChart()+"");
+        Log.d("dfd",piechart.getCenterText().toString());
+        piechart.setCenterText("" + textViewDateSumPieChart() + "");
         piechart.setCenterTextSize(18f);
         piechart.setEntryLabelColor(Color.BLACK);
         piechart.setEntryLabelTextSize(16f);

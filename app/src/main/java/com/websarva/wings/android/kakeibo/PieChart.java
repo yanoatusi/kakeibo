@@ -42,7 +42,7 @@ public class PieChart extends Fragment implements CalendarView.OnDateChangeListe
         View view2 = inflater.inflate(R.layout.pei_chart, container, false);
 
         _piechart =view2.findViewById(R.id.peichart);
-
+Log.d("sddd",  "aaa2");
         setupPieChart(_piechart);
         textViewDateSumPieChart();
         return view2;
@@ -56,13 +56,13 @@ public class PieChart extends Fragment implements CalendarView.OnDateChangeListe
 
             MainActivity mainActivity = (MainActivity) getActivity();
 
-            setupPieChart(_piechart);
-            _piechart.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
+//            setupPieChart(_piechart);
+//            _piechart.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                }
+//            });
         }
 
     }
