@@ -12,7 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -35,16 +37,30 @@ public class PieChart extends Fragment implements CalendarView.OnDateChangeListe
     Cursor dateSumMonth=null;
     DatabaseHelper FrgDbHelper;
     com.github.mikephil.charting.charts.PieChart _piechart;
+    Button _backMonth;
+    EditText _nowMonth;
+    EditText _nowDate;
+    Button _nextMonth;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_blank, container, false);
         View view2 = inflater.inflate(R.layout.pei_chart, container, false);
 
+        _backMonth  = view2.findViewById(R.id.backMonth);
+        _nowMonth = view2.findViewById(R.id.nowMonth);
+        _nowDate = view.findViewById(R.id.nowDate);
+        _nextMonth  = view2.findViewById(R.id.nextMonth);
         _piechart =view2.findViewById(R.id.peichart);
-Log.d("sddd",  "aaa2");
+
+        MainActivity mainActivity = (MainActivity) getActivity();
+        Log.d("sddd2",  mainActivity.getSqlDate());
+        String month = mainActivity.getSqlDate().substring(0,8);
+        _nowMonth.setText(month, TextView.BufferType.NORMAL);
         setupPieChart(_piechart);
         textViewDateSumPieChart();
+        _nowMonth.setFocusable(false);
         return view2;
 
     }
@@ -82,7 +98,6 @@ String ymonth;
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        setupPieChart(_piechart);
     }
 
     /**
