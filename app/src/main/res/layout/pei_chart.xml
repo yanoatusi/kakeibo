@@ -4,7 +4,37 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
 tools:context="com.websarva.wings.android.kakeibo.PieChart">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
 
+        <Button
+            android:id="@+id/backMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:text="前月" />
+
+        <EditText
+            android:id="@+id/nowMonth"
+            android:layout_width="180dp"
+            android:layout_height="38dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/nextMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:text="次月"/>
+    </LinearLayout>
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/peichart"
         android:layout_width="match_parent"
