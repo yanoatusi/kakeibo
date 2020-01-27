@@ -49,9 +49,9 @@ public class BlankFragment extends Fragment {
 
     ListView _largeCotegoryList;
     ListView _smallCategoryList;
-    Button _plusButton;
+//    Button _plusButton;
     Button _minusButton;
-    Button _memoButton;
+//    Button _memoButton;
     Button _backDate;
     EditText _nowDate;
     Button _nextDate;
@@ -70,8 +70,6 @@ public class BlankFragment extends Fragment {
     SQLiteDatabase categoryDb;
     int categoryIdSave = 0;
     int memoIdSave = 0;
-
-    private SimpleCursorAdapter adapter;
     private SimpleCursorAdapter gridAdapter;
     private SimpleCursorAdapter CategoryAdapter2;
     private SimpleCursorAdapter _saveAdapter;
@@ -94,9 +92,9 @@ public class BlankFragment extends Fragment {
         _btnSave = (TextView) view.findViewById(R.id.btnSave);
         _largeCotegoryList = (ListView) view.findViewById(R.id.LargeCotegory);
         _smallCategoryList = (ListView) view.findViewById(R.id.SmallCategory);
-        _plusButton = (Button) view.findViewById(R.id.plusButton);
+//        _plusButton = (Button) view.findViewById(R.id.plusButton);
         _minusButton = (Button) view.findViewById(R.id.minusButton);
-        _memoButton = (Button) view.findViewById(R.id.memoButton);
+//        _memoButton = (Button) view.findViewById(R.id.memoButton);
         _backDate = (Button) view.findViewById(R.id.backDate);
         _nowDate= (EditText) view.findViewById(R.id.nowDate);
         _nextDate = (Button) view.findViewById(R.id.nextDate);
@@ -131,11 +129,11 @@ public class BlankFragment extends Fragment {
                 switch (backNext.getId()) {
                     case R.id.backDate:
                         calendar.add(Calendar.DAY_OF_MONTH, -1);
-                        set_gridView();
+                        replayDatabase();
                         break;
                     case R.id.nextDate:
                         calendar.add(Calendar.DAY_OF_MONTH, +1);
-                        set_gridView();
+                        replayDatabase();
                         break;
                 }
 
@@ -158,7 +156,7 @@ public class BlankFragment extends Fragment {
         _backDate.setOnClickListener(event);
         _nextDate.setOnClickListener(event);
 
-        set_gridView();
+        replayDatabase();
 
         _gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -186,7 +184,7 @@ public class BlankFragment extends Fragment {
                                 d.delete("DatePrice","Date =" +  "'" + mainActivity.getSqlDate() + "'"+
                                         "AND _id = (SELECT _id FROM DatePrice WHERE Date ="+  "'" + mainActivity.getSqlDate() + "'" +
                                     " LIMIT 1 OFFSET" +  "'" + position + "'"+")",null);
-                                set_gridView();
+                                replayDatabase();
                             }
                         })
                         .setNegativeButton("Cancel", null)
@@ -238,7 +236,9 @@ public class BlankFragment extends Fragment {
                 int db_layout2 = R.layout.small_category_list;
                 CategoryAdapter2 = new SimpleCursorAdapter
                         (view.getContext(),db_layout2,cursor2, headers2, layouts2,0);
-
+Log.d("ssff","ssff");
+                _typePrice.setEnabled(true);
+                _memoNote.setEnabled(true);
                 CategoryAdapter2.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
                     @Override
                     public boolean setViewValue(View view1, Cursor cursor, int columnIndex) {
@@ -266,13 +266,12 @@ public class BlankFragment extends Fragment {
                 Button button = (Button) plusMinus.findViewById(plusMinus.getId());
                 String buttonStr = button.getText().toString();
                 listcreatAdapter(_largeCotegoryList,"SELECT rowid as _id,Attributable_Type, Large_category FROM Category WHERE Attributable_Type =" +  "'" + buttonStr + "'" +
-                                "GROUP BY Large_category",
+                                "GROUP BY Large_category ORDER BY _id ASC",
                         new String[]{"Large_category"},new int[]{R.id.lcategory1},R.layout.category_list);
             }
         };
-        _plusButton.setOnClickListener(plusMinusEvent);
+//        _plusButton.setOnClickListener(plusMinusEvent);
         _minusButton.setOnClickListener(plusMinusEvent);
-
         // _smallCategoryListにリスナを登録。
         _smallCategoryList.setOnItemClickListener(new ListItemClickListener());
 
@@ -367,6 +366,8 @@ public class BlankFragment extends Fragment {
         _typePrice.addTextChangedListener(new GenericTextWatcher(_typePrice));
         _tvCocktailName.addTextChangedListener(new GenericTextWatcher(_tvCocktailName));
         _nowDate.setFocusable(false);
+        _typePrice.setEnabled(false);
+        _memoNote.setEnabled(false);
         String nowD = _nowDate.toString();
         mainActivity.setSqlDate(nowD);
         return view;
@@ -470,9 +471,9 @@ public class BlankFragment extends Fragment {
     public void replayDatabase() {
         MainActivity mainActivity = (MainActivity) getActivity();
         //DBHelpderを作成する。この時にDBが作成される。
-        dbHelper = new DatabaseHelper(getActivity());
+        Helper = new DatabaseHelper(getActivity());
         //※getWritableDatabase（書き込み可能状態でも読み込みはできる）
-        SQLiteDatabase d = dbHelper.getReadableDatabase();
+        SQLiteDatabase d = Helper.getReadableDatabase();
         //DBへクエリーを発行し、カーソルを取得する。
         String sql = "SELECT _Id,Date,Small_category,Price,Memo FROM DatePrice "  +
                 "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
@@ -482,11 +483,11 @@ public class BlankFragment extends Fragment {
         String[] head = {"Small_category","Price","Memo"};
         int[] lay = {R.id.name,R.id.price,R.id.memo};
         int db_lay = R.layout.listrow;
-        adapter = new SimpleCursorAdapter
+        gridAdapter = new SimpleCursorAdapter
                 (getContext(),db_lay,gridcursor, head, lay,0);
 
-        _gridView.setAdapter(adapter);
-
+        _gridView.setAdapter(gridAdapter);
+        gridAdapter.notifyDataSetChanged();
     }
 
     private void listcreatAdapter(View view, String sql, String[] headers, int[] layouts,int db_layouts) {
@@ -502,29 +503,5 @@ public class BlankFragment extends Fragment {
                 (getContext(),db_layouts,cursor, headers, layouts,0);
         listView.setAdapter(_saveAdapter);
         _saveAdapter.notifyDataSetChanged();
-    }
-    public void set_gridView (){
-        MainActivity mainActivity = (MainActivity) getActivity();//条件検索で使用する日付文字列
-        //DBHelpderを作成する。この時にDBが作成される。
-        Helper = new DatabaseHelper(getActivity());
-        //※getWritableDatabase（書き込み可能状態でも読み込みはできる）
-        SQLiteDatabase d = Helper.getReadableDatabase();
-        //DBへクエリーを発行し、カーソルを取得する。
-
-        String sql = "SELECT _Id,Date,Small_category,Price,Memo FROM DatePrice "  +
-                "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
-                "WHERE Date =" +  "'" + mainActivity.getSqlDate() + "'";
-        Log.d("zxy",mainActivity.getSqlDate());
-        gridcursor = d.rawQuery(sql,null);
-        //取得したカーソルをカーソル用のアダプターに設定する。
-        String[] head = {"Small_category","Price","Memo"};
-        int[] lay = {R.id.name,R.id.price,R.id.memo};
-        int db_lay = R.layout.listrow;
-        gridAdapter = new SimpleCursorAdapter
-                (getContext(),db_lay,gridcursor, head, lay,0);
-
-        _gridView.setAdapter(gridAdapter);
-        gridAdapter.notifyDataSetChanged();
-        Log.d("sqla"," ");
     }
 }
