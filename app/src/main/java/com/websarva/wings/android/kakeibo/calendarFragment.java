@@ -17,16 +17,9 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class calendarFragment extends Fragment implements CalendarView.OnDateChangeListener {
 
@@ -37,19 +30,12 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
     SQLiteDatabase dateSumDb;
     private DatabaseHelper dateSumDbHelper;
     Cursor dateSumCursor=null;
-    SQLiteDatabase dateSumDbMonth;
-    private DatabaseHelper databaseHelperMonth;
-    Cursor dateSumMonth=null;
-    SimpleCursorAdapter dateSumAdapter;
 
     ListView _calendarFrgList;
     TextView _dateSum;
     CalendarView _cv;
-    DatabaseHelper FrgDbHelper;
-    PieChart _piechart;
     GridView _blankgrid;
     TextView _sumdp;
-
     EditText _nowDate;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,7 +46,7 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
         _calendarFrgList = (ListView) view2.findViewById(R.id.list);
         _dateSum = view2.findViewById(R.id.subDp);
         _cv = (CalendarView) view2.findViewById(R.id.calendarView1);
-        _piechart =view2.findViewById(R.id.y);
+
         _blankgrid = getActivity().findViewById(R.id.gridView);
         _sumdp= view2.findViewById(R.id.subDp);
         _nowDate = view.findViewById(R.id.nowDate);
@@ -69,11 +55,10 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
         _cv.setOnDateChangeListener(this);
 
             textViewDateSum();
-
             calendarFrgListDisp();
+
         Log.d("sddd",  "aaa");
-            setupPieChart(_piechart);
-            textViewDateSumPieChart();
+
         return view2;
 
     }
@@ -86,10 +71,7 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
             _cv.setOnDateChangeListener(this);
 
             textViewDateSum();
-
             calendarFrgListDisp();
-            setupPieChart(_piechart);
-            textViewDateSumPieChart();
 
         }
 
@@ -110,18 +92,12 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
         } catch (ParseException e) {
             e.printStackTrace();
         }
-_cv.setOnDateChangeListener(this);
+        _cv.setOnDateChangeListener(this);
 Log.d("afa",_cv.getDate()+"");
         textViewDateSum();
         calendarFrgListDisp();
 
-        setupPieChart(_piechart);
-        textViewDateSumPieChart();
     }
-
-
-
-
 
     /**
      * 日付文字列をlong値に変換する
@@ -159,26 +135,6 @@ Log.d("afa",_cv.getDate()+"");
         _dateSum.setText(dateSumCursor.getString(0));
 
     }
-    //日付ごとの合計をTextViewに表示
-    private String textViewDateSumPieChart(){
-        MainActivity mainActivity = (MainActivity) getActivity();
-        databaseHelperMonth = new DatabaseHelper(getActivity());
-
-        // データ取り出し
-        dateSumDbMonth = databaseHelperMonth.getReadableDatabase();
-
-        // SQLの実行。
-        String sql2 = "SELECT SUM(Price) FROM DatePrice WHERE Date LIKE" + "'%" + mainActivity.getSqlDate().substring(0,8) + "%'";
-        dateSumMonth = dateSumDbMonth.rawQuery(sql2, null);
-
-        // データベース内のCursorを移動
-        dateSumMonth.move(1);
-
-        // TextViewを取得しデータベースの値を反映。
-        Log.d("cfc",dateSumMonth.getString(0)+"");
-            return dateSumMonth.getString(0);
-
-    }
     private void calendarFrgListDisp(){
         MainActivity mainActivity = (MainActivity) getActivity();
         //DBHelpderを作成する。この時にDBが作成される。
@@ -201,83 +157,4 @@ Log.d("afa",_cv.getDate()+"");
         _calendarFrgList.setAdapter(calendarFrgAdapter);
         calendarFrgAdapter.notifyDataSetChanged();
     }
-
-    private void setupPieChart(View view) {
-        //PieEntriesのリストを作成する:
-
-        float[] floatArray = new float[floatContacts().length];
-        for (int i = 0; i < floatContacts().length; i++){
-            float x = Float.parseFloat(floatContacts()[i]);
-            floatArray[i] = x;
-        }
-        List<PieEntry> pieEntries = new ArrayList<>();
-        for (int i = 0; i < floatContacts().length; i++) {
-            pieEntries.add(new PieEntry(floatArray[i], getContacts()[i]));
-        }
-        MainActivity mainActivity = (MainActivity) getActivity();
-        PieDataSet dataSet = new PieDataSet(pieEntries, mainActivity.getSqlDate().substring(0,8));
-        dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
-        PieData data = new PieData(dataSet);
-
-        //PieChartを取得する:
-        PieChart piechart = (PieChart) view;
-        Log.d("dfd",piechart.getCenterText().toString());
-        piechart.setCenterText("" + textViewDateSumPieChart() + "");
-        piechart.setCenterTextSize(18f);
-        piechart.setEntryLabelColor(Color.BLACK);
-        piechart.setEntryLabelTextSize(16f);
-        piechart.setData(data);
-    }
-
-    public String[] getContacts(){
-        MainActivity mainActivity = (MainActivity) getActivity();
-        FrgDbHelper = new DatabaseHelper(getActivity());
-        SQLiteDatabase d = FrgDbHelper.getReadableDatabase();
-        String sql = "SELECT _Id,Date,Large_category,Price,Memo FROM DatePrice " +
-                "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
-                "WHERE Date LIKE" + "'%" + mainActivity.getSqlDate().substring(0,8) + "%'"+
-                "GROUP BY Large_category";
-        Cursor cursor = d.rawQuery(sql, null);
-        cursor.moveToFirst();
-        ArrayList<String> names = new ArrayList<String>();
-        while(!cursor.isAfterLast()) {
-            names.add(cursor.getString(cursor.getColumnIndex("Large_category")));
-            cursor.moveToNext();
-        }
-        cursor.close();
-        return names.toArray(new String[names.size()]);
-    }
-
-    public String[] floatContacts(){
-        MainActivity mainActivity = (MainActivity) getActivity();
-        FrgDbHelper = new DatabaseHelper(getActivity());
-        SQLiteDatabase d = FrgDbHelper.getReadableDatabase();
-        String sql = "SELECT _Id,Date,Large_category,Price,Memo FROM DatePrice " +
-                "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
-                "WHERE Date LIKE" + "'%" + mainActivity.getSqlDate().substring(0,8) + "%'"+
-                "GROUP BY Large_category ";
-        Cursor cursor = d.rawQuery(sql, null);
-        cursor.moveToFirst();
-        ArrayList<String> names = new ArrayList<String>();
-        while(!cursor.isAfterLast()) {
-            names.add(cursor.getString(cursor.getColumnIndex("Price")));
-            cursor.moveToNext();
-        }
-        cursor.close();
-        return names.toArray(new String[names.size()]);
-    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

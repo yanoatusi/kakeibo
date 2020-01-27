@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class PieChart extends Fragment implements CalendarView.OnDateChangeListener {
+public class PieChartFragment extends Fragment implements CalendarView.OnDateChangeListener {
 
     SQLiteDatabase dateSumDbMonth;
     private DatabaseHelper databaseHelperMonth;

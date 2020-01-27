@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-tools:context="com.websarva.wings.android.kakeibo.PieChart">
+tools:context="com.websarva.wings.android.kakeibo.PieChartFragment">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

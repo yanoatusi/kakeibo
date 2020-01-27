@@ -15,20 +15,11 @@
         android:layout_marginBottom="5dp"
         android:orientation="horizontal">
 
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/y"
-            android:layout_width="353dp"
-            android:layout_height="220dp"
-            android:layout_weight="1"
-            android:clickable="true">
-
-        </com.github.mikephil.charting.charts.PieChart>
-
         <ListView
             android:id="@+id/list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_height="220dp"
+            android:layout_weight="1"/>
     </LinearLayout>
 
     <LinearLayout
@@ -62,7 +53,7 @@
         android:id="@+id/calendarView1"
         android:layout_width="match_parent"
         android:layout_height="350dp"
-        android:background="@drawable/background"
+        android:background="@color/colorPrimary"
         android:clickable="true" />
 
 </LinearLayout>

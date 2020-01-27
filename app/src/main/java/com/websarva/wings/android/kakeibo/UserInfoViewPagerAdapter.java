@@ -3,9 +3,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.websarva.wings.android.kakeibo.BlankFragment;
-import com.websarva.wings.android.kakeibo.calendarFragment;
-
 /**
  * Created by naoi on 2017/04/24.
  */
@@ -28,7 +25,7 @@ public class UserInfoViewPagerAdapter extends FragmentPagerAdapter {
                 fragment = new calendarFragment();
                 break;
             case 2:
-                fragment = new PieChart();
+                fragment = new PieChartFragment();
                 break;
         }
         return fragment;

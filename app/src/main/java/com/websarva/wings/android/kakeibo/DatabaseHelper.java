@@ -72,14 +72,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 36,'支出','美容費','エステ');");
         db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 37,'支出','美容費','化粧品・整髪料');");
         db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 38,'支出','被服費','服・靴');");
-        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 39,'支出','被服費','バッグ・アクセサリ');");
-        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 40,'支出','被服費','クリーニング');");
-        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 41,'支出','医療費','病院');");
-        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 42,'支出','医療費','医薬品');");
-        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 43,'支出','医療費','市販薬');");
-        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 44,'支出','特別支出','冠婚葬祭');");
-        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 45,'支出','その他支出','娯楽');");
-        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 46,'支出','その他支出','その他');");
+        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 39,'支出','被服費','バッグ');");
+        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 40,'支出','被服費','アクセサリー');");
+        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 41,'支出','被服費','クリーニング');");
+        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 42,'支出','医療費','病院');");
+        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 43,'支出','医療費','医薬品');");
+        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 44,'支出','医療費','市販薬');");
+        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 45,'支出','特別支出','冠婚葬祭');");
+        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 46,'支出','その他支出','娯楽');");
+        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 47,'支出','その他支出','その他');");
 
 
 //        db.execSQL("INSERT INTO Category (Category_Id,Attributable_Type,Large_category,Small_category) VALUES( 42,'収入','中古品販売','フリマ');");
