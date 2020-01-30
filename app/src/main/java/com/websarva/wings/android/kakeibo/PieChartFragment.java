@@ -24,9 +24,12 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Year;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -34,30 +37,47 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
 
     SQLiteDatabase dateSumDbMonth;
     private DatabaseHelper databaseHelperMonth;
-    Cursor dateSumMonth=null;
+    Cursor dateSumMonth = null;
     DatabaseHelper FrgDbHelper;
     com.github.mikephil.charting.charts.PieChart _piechart;
     Button _backMonth;
     EditText _nowMonth;
-    EditText _nowDate;
     Button _nextMonth;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_blank, container, false);
         View view2 = inflater.inflate(R.layout.pei_chart, container, false);
 
-        _backMonth  = view2.findViewById(R.id.backMonth);
+        _backMonth = view2.findViewById(R.id.backMonth);
         _nowMonth = view2.findViewById(R.id.nowMonth);
-        _nowDate = view.findViewById(R.id.nowDate);
-        _nextMonth  = view2.findViewById(R.id.nextMonth);
-        _piechart =view2.findViewById(R.id.peichart);
+        _nextMonth = view2.findViewById(R.id.nextMonth);
+        _piechart = view2.findViewById(R.id.peichart);
 
         MainActivity mainActivity = (MainActivity) getActivity();
-        Log.d("sddd2",  mainActivity.getSqlDate());
-        String month = mainActivity.getSqlDate().substring(0,8);
-        _nowMonth.setText(month, TextView.BufferType.NORMAL);
+        Log.d("sddd2", mainActivity.getSqlDate());
+        Calendar cl = Calendar.getInstance();
+        _nowMonth.setText(cl.get(Calendar.YEAR) + "年" + (cl.get(Calendar.MONTH)+1) +"月", TextView.BufferType.NORMAL);
+        View.OnClickListener event = new View.OnClickListener() {
+            // クリックしたら前月か次月
+            public void onClick(View backNext) {
+                // MainActivityのインスタンスを取得
+                Calendar cl = Calendar.getInstance();
+                MainActivity mainActivity = (MainActivity) getActivity();
+                switch (backNext.getId()) {
+                    case R.id.backMonth:
+                        cl.add(Calendar.MONTH, -1);
+                        _nowMonth.setText(cl.get(Calendar.YEAR) + "年" + (cl.get(Calendar.MONTH)) +"月", TextView.BufferType.NORMAL);
+                        break;
+                    case R.id.nextMonth:
+                        cl.add(Calendar.MONTH, +1);
+                        _nowMonth.setText(cl.get(Calendar.YEAR) + "年" + (cl.get(Calendar.MONTH)) +"月", TextView.BufferType.NORMAL);
+                        break;
+                }
+            }
+        };
+        _backMonth.setOnClickListener(event);
+        _nextMonth.setOnClickListener(event);
         setupPieChart(_piechart);
         textViewDateSumPieChart();
         _nowMonth.setFocusable(false);
@@ -82,7 +102,9 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
         }
 
     }
-String ymonth;
+
+    String ymonth;
+
     public void onSelectedDayChange(CalendarView view, int year, int month,
                                     int dayOfMonth) {
 
@@ -90,11 +112,11 @@ String ymonth;
         MainActivity mainActivity = (MainActivity) getActivity();
         try {
             SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy年MM月dd日");
-                _date = year + "年" + (month + 1) + "月" + dayOfMonth + "日";
+            _date = year + "年" + (month + 1) + "月" + dayOfMonth + "日";
             Log.d("rrrrr", _date + "");
             Date selectDate = sdFormat.parse(_date);
             mainActivity.setTextView(sdFormat.format(selectDate));
-            ymonth = sdFormat.format(selectDate).substring(0,8);
+            ymonth = sdFormat.format(selectDate).substring(0, 8);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -102,12 +124,13 @@ String ymonth;
 
     /**
      * 日付文字列をlong値に変換する
+     *
      * @param value
      * @return
      */
     public long convertDateStringToLong(String value) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日");
-        Date parse = null ;
+        Date parse = null;
         try {
             parse = simpleDateFormat.parse(value);
         } catch (ParseException e) {
@@ -116,8 +139,9 @@ String ymonth;
         long time = parse.getTime();
         return time;
     }
+
     //日付ごとの合計をTextViewに表示
-    private String textViewDateSumPieChart(){
+    private String textViewDateSumPieChart() {
         MainActivity mainActivity = (MainActivity) getActivity();
         databaseHelperMonth = new DatabaseHelper(getActivity());
 
@@ -125,7 +149,7 @@ String ymonth;
         dateSumDbMonth = databaseHelperMonth.getReadableDatabase();
 
         // SQLの実行。
-        String sql2 = "SELECT SUM(Price) FROM DatePrice WHERE Date LIKE" + "'%" + mainActivity.getSqlDate().substring(0,8) + "%'";
+        String sql2 = "SELECT SUM(Price) FROM DatePrice WHERE Date LIKE" + "'%" + mainActivity.getSqlDate().substring(0, 8) + "%'";
         dateSumMonth = dateSumDbMonth.rawQuery(sql2, null);
 
         // データベース内のCursorを移動
@@ -139,7 +163,7 @@ String ymonth;
         //PieEntriesのリストを作成する:
 
         float[] floatArray = new float[floatContacts().length];
-        for (int i = 0; i < floatContacts().length; i++){
+        for (int i = 0; i < floatContacts().length; i++) {
             float x = Float.parseFloat(floatContacts()[i]);
             floatArray[i] = x;
         }
@@ -148,31 +172,32 @@ String ymonth;
             pieEntries.add(new PieEntry(floatArray[i], getContacts()[i]));
         }
         MainActivity mainActivity = (MainActivity) getActivity();
-        PieDataSet dataSet = new PieDataSet(pieEntries, mainActivity.getSqlDate().substring(0,8));
+        PieDataSet dataSet = new PieDataSet(pieEntries, mainActivity.getSqlDate().substring(0, 8));
         dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
         PieData data = new PieData(dataSet);
 
         //PieChartを取得する:
         com.github.mikephil.charting.charts.PieChart piechart = (com.github.mikephil.charting.charts.PieChart) view;
-        piechart.setCenterText("" +textViewDateSumPieChart()+"");
+        piechart.setCenterText("" + textViewDateSumPieChart() + "");
         piechart.setCenterTextSize(18f);
 
         piechart.setEntryLabelColor(Color.BLACK);
         piechart.setEntryLabelTextSize(16f);
         piechart.setData(data);
     }
-    public String[] getContacts(){
+
+    public String[] getContacts() {
         MainActivity mainActivity = (MainActivity) getActivity();
         FrgDbHelper = new DatabaseHelper(getActivity());
         SQLiteDatabase d = FrgDbHelper.getReadableDatabase();
         String sql = "SELECT _Id,Date,Large_category,Price,Memo FROM DatePrice " +
                 "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
-                "WHERE Date LIKE" + "'%" + mainActivity.getSqlDate().substring(0,8) + "%'"+
+                "WHERE Date LIKE" + "'%" + mainActivity.getSqlDate().substring(0, 8) + "%'" +
                 "GROUP BY Large_category";
         Cursor cursor = d.rawQuery(sql, null);
         cursor.moveToFirst();
         ArrayList<String> names = new ArrayList<String>();
-        while(!cursor.isAfterLast()) {
+        while (!cursor.isAfterLast()) {
             names.add(cursor.getString(cursor.getColumnIndex("Large_category")));
             cursor.moveToNext();
         }
@@ -180,26 +205,33 @@ String ymonth;
         return names.toArray(new String[names.size()]);
     }
 
-    public String[] floatContacts(){
+    public String[] floatContacts() {
         MainActivity mainActivity = (MainActivity) getActivity();
         FrgDbHelper = new DatabaseHelper(getActivity());
         SQLiteDatabase d = FrgDbHelper.getReadableDatabase();
         String sql = "SELECT _Id,Date,Large_category,Price,Memo FROM DatePrice " +
                 "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
-                "WHERE Date LIKE" + "'%" + mainActivity.getSqlDate().substring(0,8) + "%'"+
+                "WHERE Date LIKE" + "'%" + mainActivity.getSqlDate().substring(0, 8) + "%'" +
                 "GROUP BY Large_category ";
         Cursor cursor = d.rawQuery(sql, null);
         cursor.moveToFirst();
         ArrayList<String> names = new ArrayList<String>();
-        while(!cursor.isAfterLast()) {
+        while (!cursor.isAfterLast()) {
             names.add(cursor.getString(cursor.getColumnIndex("Price")));
             cursor.moveToNext();
         }
         cursor.close();
         return names.toArray(new String[names.size()]);
     }
-}
 
+
+    public static String getNowMonth() {
+        final DateFormat df = new SimpleDateFormat("yyyy年MM月");
+        final Date date = new Date(System.currentTimeMillis());
+        return df.format(date);
+    }
+
+}
 
 
 
