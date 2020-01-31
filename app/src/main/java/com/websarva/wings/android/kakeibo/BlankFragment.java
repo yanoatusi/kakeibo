@@ -73,7 +73,7 @@ public class BlankFragment extends Fragment {
     private SimpleCursorAdapter gridAdapter;
     private SimpleCursorAdapter CategoryAdapter2;
     private SimpleCursorAdapter _saveAdapter;
-
+    Calendar calendar = Calendar.getInstance();
     //+-切り替え変数
     private int _priceType;
 
@@ -123,7 +123,7 @@ public class BlankFragment extends Fragment {
             // クリックしたら前の日か次の日
             public void onClick(View backNext) {
                 // MainActivityのインスタンスを取得
-                Calendar calendar = Calendar.getInstance();
+
                 MainActivity mainActivity = (MainActivity) getActivity();
                 calendar.set(mainActivity.intYear(), mainActivity.intMonth(), mainActivity.intDay());
                 switch (backNext.getId()) {

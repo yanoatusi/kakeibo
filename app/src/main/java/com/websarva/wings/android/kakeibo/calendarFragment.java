@@ -37,6 +37,7 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
     GridView _blankgrid;
     TextView _sumdp;
     EditText _nowDate;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -46,11 +47,9 @@ public class calendarFragment extends Fragment implements CalendarView.OnDateCha
         _calendarFrgList = (ListView) view2.findViewById(R.id.list);
         _dateSum = view2.findViewById(R.id.subDp);
         _cv = (CalendarView) view2.findViewById(R.id.calendarView1);
-
         _blankgrid = getActivity().findViewById(R.id.gridView);
         _sumdp= view2.findViewById(R.id.subDp);
         _nowDate = view.findViewById(R.id.nowDate);
-
 
         _cv.setOnDateChangeListener(this);
 

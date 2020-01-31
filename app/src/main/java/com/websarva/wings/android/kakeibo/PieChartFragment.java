@@ -43,7 +43,7 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
     Button _backMonth;
     EditText _nowMonth;
     Button _nextMonth;
-
+    Calendar cl = Calendar.getInstance();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -56,22 +56,25 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
 
         MainActivity mainActivity = (MainActivity) getActivity();
         Log.d("sddd2", mainActivity.getSqlDate());
-        Calendar cl = Calendar.getInstance();
         _nowMonth.setText(cl.get(Calendar.YEAR) + "年" + (cl.get(Calendar.MONTH)+1) +"月", TextView.BufferType.NORMAL);
         View.OnClickListener event = new View.OnClickListener() {
             // クリックしたら前月か次月
             public void onClick(View backNext) {
                 // MainActivityのインスタンスを取得
-                Calendar cl = Calendar.getInstance();
+
                 MainActivity mainActivity = (MainActivity) getActivity();
                 switch (backNext.getId()) {
                     case R.id.backMonth:
                         cl.add(Calendar.MONTH, -1);
-                        _nowMonth.setText(cl.get(Calendar.YEAR) + "年" + (cl.get(Calendar.MONTH)) +"月", TextView.BufferType.NORMAL);
+                        _nowMonth.setText(cl.get(Calendar.YEAR) + "年" + (cl.get(Calendar.MONTH)+1) +"月", TextView.BufferType.NORMAL);
+                        setupPieChart(_piechart);
+                        textViewDateSumPieChart();
                         break;
                     case R.id.nextMonth:
                         cl.add(Calendar.MONTH, +1);
-                        _nowMonth.setText(cl.get(Calendar.YEAR) + "年" + (cl.get(Calendar.MONTH)) +"月", TextView.BufferType.NORMAL);
+                        _nowMonth.setText(cl.get(Calendar.YEAR) + "年" + (cl.get(Calendar.MONTH)+1) +"月", TextView.BufferType.NORMAL);
+                        setupPieChart(_piechart);
+                        textViewDateSumPieChart();
                         break;
                 }
             }
@@ -149,7 +152,7 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
         dateSumDbMonth = databaseHelperMonth.getReadableDatabase();
 
         // SQLの実行。
-        String sql2 = "SELECT SUM(Price) FROM DatePrice WHERE Date LIKE" + "'%" + mainActivity.getSqlDate().substring(0, 8) + "%'";
+        String sql2 = "SELECT SUM(Price) FROM DatePrice WHERE Date LIKE" + "'%" + _nowMonth.getText().toString() + "%'";
         dateSumMonth = dateSumDbMonth.rawQuery(sql2, null);
 
         // データベース内のCursorを移動
@@ -172,7 +175,7 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
             pieEntries.add(new PieEntry(floatArray[i], getContacts()[i]));
         }
         MainActivity mainActivity = (MainActivity) getActivity();
-        PieDataSet dataSet = new PieDataSet(pieEntries, mainActivity.getSqlDate().substring(0, 8));
+        PieDataSet dataSet = new PieDataSet(pieEntries, _nowMonth.getText().toString());
         dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
         PieData data = new PieData(dataSet);
 
@@ -192,7 +195,7 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
         SQLiteDatabase d = FrgDbHelper.getReadableDatabase();
         String sql = "SELECT _Id,Date,Large_category,Price,Memo FROM DatePrice " +
                 "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
-                "WHERE Date LIKE" + "'%" + mainActivity.getSqlDate().substring(0, 8) + "%'" +
+                "WHERE Date LIKE" + "'%" + _nowMonth.getText().toString() + "%'" +
                 "GROUP BY Large_category";
         Cursor cursor = d.rawQuery(sql, null);
         cursor.moveToFirst();
@@ -211,7 +214,7 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
         SQLiteDatabase d = FrgDbHelper.getReadableDatabase();
         String sql = "SELECT _Id,Date,Large_category,Price,Memo FROM DatePrice " +
                 "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
-                "WHERE Date LIKE" + "'%" + mainActivity.getSqlDate().substring(0, 8) + "%'" +
+                "WHERE Date LIKE" + "'%" + _nowMonth.getText().toString() + "%'" +
                 "GROUP BY Large_category ";
         Cursor cursor = d.rawQuery(sql, null);
         cursor.moveToFirst();
