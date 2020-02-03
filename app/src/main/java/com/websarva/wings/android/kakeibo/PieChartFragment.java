@@ -164,7 +164,9 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
         piechart.setEntryLabelColor(Color.BLACK);
         piechart.setEntryLabelTextSize(16f);
         piechart.setData(data);
-        piechart.setVisibility(View.GONE);
+        if (textViewDateSumPieChart() == null) {
+            piechart.setVisibility(View.INVISIBLE);
+        }
     }
 
     public String[] getContacts() {
