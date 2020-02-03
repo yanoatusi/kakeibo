@@ -123,9 +123,7 @@ public class BlankFragment extends Fragment {
             // クリックしたら前の日か次の日
             public void onClick(View backNext) {
                 // MainActivityのインスタンスを取得
-
                 MainActivity mainActivity = (MainActivity) getActivity();
-                calendar.set(mainActivity.intYear(), mainActivity.intMonth(), mainActivity.intDay());
                 switch (backNext.getId()) {
                     case R.id.backDate:
                         calendar.add(Calendar.DAY_OF_MONTH, -1);

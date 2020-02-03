@@ -54,15 +54,10 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
         _nextMonth = view2.findViewById(R.id.nextMonth);
         _piechart = view2.findViewById(R.id.peichart);
 
-        MainActivity mainActivity = (MainActivity) getActivity();
-        Log.d("sddd2", mainActivity.getSqlDate());
         _nowMonth.setText(cl.get(Calendar.YEAR) + "年" + (cl.get(Calendar.MONTH)+1) +"月", TextView.BufferType.NORMAL);
         View.OnClickListener event = new View.OnClickListener() {
             // クリックしたら前月か次月
             public void onClick(View backNext) {
-                // MainActivityのインスタンスを取得
-
-                MainActivity mainActivity = (MainActivity) getActivity();
                 switch (backNext.getId()) {
                     case R.id.backMonth:
                         cl.add(Calendar.MONTH, -1);
@@ -125,24 +120,6 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
         }
     }
 
-    /**
-     * 日付文字列をlong値に変換する
-     *
-     * @param value
-     * @return
-     */
-    public long convertDateStringToLong(String value) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日");
-        Date parse = null;
-        try {
-            parse = simpleDateFormat.parse(value);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        long time = parse.getTime();
-        return time;
-    }
-
     //日付ごとの合計をTextViewに表示
     private String textViewDateSumPieChart() {
         MainActivity mainActivity = (MainActivity) getActivity();
@@ -187,6 +164,7 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
         piechart.setEntryLabelColor(Color.BLACK);
         piechart.setEntryLabelTextSize(16f);
         piechart.setData(data);
+        piechart.setVisibility(View.GONE);
     }
 
     public String[] getContacts() {
@@ -226,14 +204,6 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
         cursor.close();
         return names.toArray(new String[names.size()]);
     }
-
-
-    public static String getNowMonth() {
-        final DateFormat df = new SimpleDateFormat("yyyy年MM月");
-        final Date date = new Date(System.currentTimeMillis());
-        return df.format(date);
-    }
-
 }
 
 
