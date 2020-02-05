@@ -18,7 +18,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
-
+import android.os.AsyncTask;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -79,45 +79,53 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
         setupPieChart(_piechart);
         textViewDateSumPieChart();
         _nowMonth.setFocusable(false);
+        _piechart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SampleAsyncTask task = new SampleAsyncTask();
+                task.execute();
+            }
+        });
         return view2;
 
     }
+    private class SampleAsyncTask extends AsyncTask<Void, Long, Long> {
 
+        public SampleAsyncTask() {
+
+        }
+
+        // バックグラウンド処理の前に実行される処理
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        // バックグラウンド処理完了後に実行される処理
+        @Override
+        protected void onPostExecute(Long result) {
+
+        }
+
+        // バックグラウンド処理
+        @Override
+        protected Long doInBackground(Void... params) {
+            long a = 1000;
+            return a;
+        }
+    }
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
 
-            MainActivity mainActivity = (MainActivity) getActivity();
-
-//            setupPieChart(_piechart);
-//            _piechart.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//
-//                }
-//            });
         }
 
     }
 
-    String ymonth;
-
     public void onSelectedDayChange(CalendarView view, int year, int month,
                                     int dayOfMonth) {
 
-        String _date;
-        MainActivity mainActivity = (MainActivity) getActivity();
-        try {
-            SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy年MM月dd日");
-            _date = year + "年" + (month + 1) + "月" + dayOfMonth + "日";
-            Log.d("rrrrr", _date + "");
-            Date selectDate = sdFormat.parse(_date);
-            mainActivity.setTextView(sdFormat.format(selectDate));
-            ymonth = sdFormat.format(selectDate).substring(0, 8);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
     }
 
     //日付ごとの合計をTextViewに表示
@@ -151,26 +159,23 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
         for (int i = 0; i < floatContacts().length; i++) {
             pieEntries.add(new PieEntry(floatArray[i], getContacts()[i]));
         }
-        MainActivity mainActivity = (MainActivity) getActivity();
         PieDataSet dataSet = new PieDataSet(pieEntries, _nowMonth.getText().toString());
         dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
         PieData data = new PieData(dataSet);
 
         //PieChartを取得する:
         com.github.mikephil.charting.charts.PieChart piechart = (com.github.mikephil.charting.charts.PieChart) view;
+        piechart.setData(data);
         piechart.setCenterText("" + textViewDateSumPieChart() + "");
         piechart.setCenterTextSize(18f);
-
         piechart.setEntryLabelColor(Color.BLACK);
         piechart.setEntryLabelTextSize(16f);
-        piechart.setData(data);
-        if (textViewDateSumPieChart() == null) {
-            piechart.setVisibility(View.INVISIBLE);
-        }
+//        if (textViewDateSumPieChart() == null) {
+//            piechart.setVisibility(View.INVISIBLE);
+//        }
     }
 
     public String[] getContacts() {
-        MainActivity mainActivity = (MainActivity) getActivity();
         FrgDbHelper = new DatabaseHelper(getActivity());
         SQLiteDatabase d = FrgDbHelper.getReadableDatabase();
         String sql = "SELECT _Id,Date,Large_category,Price,Memo FROM DatePrice " +
