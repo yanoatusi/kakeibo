@@ -104,7 +104,7 @@ public class BlankFragment extends Fragment {
         // idが_nowDatenのButtonを取得
         mainActivity.setNowDate(_nowDate);
         mainActivity.setSqlDate(_nowDate.getText().toString());
-        Log.d("BlankFrg_getSqlDate1",mainActivity.getSqlDate()+"");
+        Log.d("BlankFrg_getSqlDate1",_nowDate.getText().toString()+"");
 
         // clickイベント追加
         _nowDate.setOnClickListener(new View.OnClickListener() {
@@ -284,7 +284,7 @@ Log.d("ssff","ssff");
                 //入力された金額を取得。
                 MainActivity mainActivity = (MainActivity) getActivity();
                 int priceNote = Integer.parseInt(_typePrice.getText().toString());
-                mainActivity.setSqlDate(_nowDate.getText().toString());
+                mainActivity.setSqlDate(_nowDate.toString());
                 String a = mainActivity.getSqlDate();
                 String memoNote =  _memoNote.getText().toString();
 
@@ -366,8 +366,6 @@ Log.d("ssff","ssff");
         _nowDate.setFocusable(false);
         _typePrice.setEnabled(false);
         _memoNote.setEnabled(false);
-        String nowD = _nowDate.toString();
-        mainActivity.setSqlDate(nowD);
         return view;
     }
 

@@ -36,8 +36,11 @@ import java.util.List;
 public class PieChartFragment extends Fragment implements CalendarView.OnDateChangeListener {
 
     SQLiteDatabase dateSumDbMonth;
+    SQLiteDatabase d;
+    SQLiteDatabase e;
     private DatabaseHelper databaseHelperMonth;
     Cursor dateSumMonth = null;
+    Cursor cursor = null;
     DatabaseHelper FrgDbHelper;
     com.github.mikephil.charting.charts.PieChart _piechart;
     Button _backMonth;
@@ -54,20 +57,20 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
         _nextMonth = view2.findViewById(R.id.nextMonth);
         _piechart = view2.findViewById(R.id.peichart);
 
-        _nowMonth.setText(cl.get(Calendar.YEAR) + "年" + (cl.get(Calendar.MONTH)+1) +"月", TextView.BufferType.NORMAL);
+        setNowDate(_nowMonth);
         View.OnClickListener event = new View.OnClickListener() {
             // クリックしたら前月か次月
             public void onClick(View backNext) {
                 switch (backNext.getId()) {
                     case R.id.backMonth:
                         cl.add(Calendar.MONTH, -1);
-                        _nowMonth.setText(cl.get(Calendar.YEAR) + "年" + (cl.get(Calendar.MONTH)+1) +"月", TextView.BufferType.NORMAL);
+                        setNowDate(_nowMonth);
                         setupPieChart(_piechart);
                         textViewDateSumPieChart();
                         break;
                     case R.id.nextMonth:
                         cl.add(Calendar.MONTH, +1);
-                        _nowMonth.setText(cl.get(Calendar.YEAR) + "年" + (cl.get(Calendar.MONTH)+1) +"月", TextView.BufferType.NORMAL);
+                        setNowDate(_nowMonth);
                         setupPieChart(_piechart);
                         textViewDateSumPieChart();
                         break;
@@ -76,18 +79,23 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
         };
         _backMonth.setOnClickListener(event);
         _nextMonth.setOnClickListener(event);
-        setupPieChart(_piechart);
+
         textViewDateSumPieChart();
         _nowMonth.setFocusable(false);
-        _piechart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SampleAsyncTask task = new SampleAsyncTask();
-                task.execute();
-            }
-        });
+//        _piechart.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                SampleAsyncTask task = new SampleAsyncTask();
+//                task.execute();
+//            }
+//        });
         return view2;
 
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        setupPieChart(_piechart);
     }
     private class SampleAsyncTask extends AsyncTask<Void, Long, Long> {
 
@@ -104,24 +112,17 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
         // バックグラウンド処理完了後に実行される処理
         @Override
         protected void onPostExecute(Long result) {
-
+            setupPieChart(_piechart);
         }
 
         // バックグラウンド処理
         @Override
         protected Long doInBackground(Void... params) {
-            long a = 1000;
+long a=0;
             return a;
         }
     }
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
 
-        }
-
-    }
 
     public void onSelectedDayChange(CalendarView view, int year, int month,
                                     int dayOfMonth) {
@@ -137,7 +138,7 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
         dateSumDbMonth = databaseHelperMonth.getReadableDatabase();
 
         // SQLの実行。
-        String sql2 = "SELECT SUM(Price) FROM DatePrice WHERE Date LIKE" + "'%" + _nowMonth.getText().toString() + "%'";
+        String sql2 = "SELECT SUM(Price) FROM DatePrice WHERE Date LIKE" + "'%" + getSqlDate() + "%'";
         dateSumMonth = dateSumDbMonth.rawQuery(sql2, null);
 
         // データベース内のCursorを移動
@@ -150,26 +151,20 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
     private void setupPieChart(View view) {
         //PieEntriesのリストを作成する:
 
-        float[] floatArray = new float[floatContacts().length];
-        for (int i = 0; i < floatContacts().length; i++) {
-            float x = Float.parseFloat(floatContacts()[i]);
-            floatArray[i] = x;
-        }
         List<PieEntry> pieEntries = new ArrayList<>();
         for (int i = 0; i < floatContacts().length; i++) {
-            pieEntries.add(new PieEntry(floatArray[i], getContacts()[i]));
+            pieEntries.add(new PieEntry(Float()[i], getContacts()[i]));
         }
-        PieDataSet dataSet = new PieDataSet(pieEntries, _nowMonth.getText().toString());
+        PieDataSet dataSet = new PieDataSet(pieEntries, getSqlDate());
         dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
         PieData data = new PieData(dataSet);
 
         //PieChartを取得する:
-        com.github.mikephil.charting.charts.PieChart piechart = (com.github.mikephil.charting.charts.PieChart) view;
-        piechart.setData(data);
-        piechart.setCenterText("" + textViewDateSumPieChart() + "");
-        piechart.setCenterTextSize(18f);
-        piechart.setEntryLabelColor(Color.BLACK);
-        piechart.setEntryLabelTextSize(16f);
+        _piechart.setData(data);
+        _piechart.setCenterText("" + textViewDateSumPieChart() + "");
+        _piechart.setCenterTextSize(18f);
+        _piechart.setEntryLabelColor(Color.BLACK);
+        _piechart.setEntryLabelTextSize(16f);
 //        if (textViewDateSumPieChart() == null) {
 //            piechart.setVisibility(View.INVISIBLE);
 //        }
@@ -177,12 +172,13 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
 
     public String[] getContacts() {
         FrgDbHelper = new DatabaseHelper(getActivity());
-        SQLiteDatabase d = FrgDbHelper.getReadableDatabase();
+        d = FrgDbHelper.getReadableDatabase();
         String sql = "SELECT _Id,Date,Large_category,Price,Memo FROM DatePrice " +
                 "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
-                "WHERE Date LIKE" + "'%" + _nowMonth.getText().toString() + "%'" +
+                "WHERE Date LIKE" + "'%" + getSqlDate() + "%'" +
                 "GROUP BY Large_category";
-        Cursor cursor = d.rawQuery(sql, null);
+        Log.d("etyu3",getSqlDate()+"");
+        cursor = d.rawQuery(sql, null);
         cursor.moveToFirst();
         ArrayList<String> names = new ArrayList<String>();
         while (!cursor.isAfterLast()) {
@@ -194,14 +190,14 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
     }
 
     public String[] floatContacts() {
-        MainActivity mainActivity = (MainActivity) getActivity();
         FrgDbHelper = new DatabaseHelper(getActivity());
-        SQLiteDatabase d = FrgDbHelper.getReadableDatabase();
+        d = FrgDbHelper.getReadableDatabase();
         String sql = "SELECT _Id,Date,Large_category,Price,Memo FROM DatePrice " +
                 "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
-                "WHERE Date LIKE" + "'%" + _nowMonth.getText().toString() + "%'" +
+                "WHERE Date LIKE" + "'%" + getSqlDate() + "%'" +
                 "GROUP BY Large_category ";
-        Cursor cursor = d.rawQuery(sql, null);
+        Log.d("etyu3",_nowMonth.getText().toString()+"");
+        cursor = d.rawQuery(sql, null);
         cursor.moveToFirst();
         ArrayList<String> names = new ArrayList<String>();
         while (!cursor.isAfterLast()) {
@@ -210,6 +206,31 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
         }
         cursor.close();
         return names.toArray(new String[names.size()]);
+    }
+    public float[] Float() {
+        float[] floatArray = new float[floatContacts().length];
+        for (int i = 0; i < floatContacts().length; i++) {
+            float x = Float.parseFloat(floatContacts()[i]);
+            floatArray[i] = x;
+        }
+        return floatArray;
+    }
+    public String getSqlDate(){
+        return _nowMonth.getText().toString();
+    }
+    public void setNowDate(EditText dialogBtn) {
+        try {
+
+            int year = cl.get(Calendar.YEAR);
+            int month = cl.get(Calendar.MONTH);
+            int day = cl.get(Calendar.DAY_OF_MONTH);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月");
+            String date = year + "年" + (month + 1) + "月";
+            Date selectDate = sdf.parse(date);
+            dialogBtn.setText(sdf.format(selectDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }
 
