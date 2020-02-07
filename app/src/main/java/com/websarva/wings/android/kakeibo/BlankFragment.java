@@ -174,11 +174,6 @@ public class BlankFragment extends Fragment {
                                 //DBを読み込み可能状態で開く。
                                 //※getWritableDatabase（書き込み可能状態でも読み込みはできる）
                                 SQLiteDatabase d = dbHelper.getReadableDatabase();
-                                //DBへクエリーを発行し、カーソルを取得する。
-//                                String sql = "DELETE FROM DatePrice " +
-//                                        "WHERE Date =" +  "'" + mainActivity.getSqlDate() + "'" +
-//                                        "AND _id = (SELECT _id FROM DatePrice LIMIT 1 OFFSET" +  "'" + position + "'"+")";
-//                                d.execSQL(sql);
                                 d.delete("DatePrice","Date =" +  "'" + mainActivity.getSqlDate() + "'"+
                                         "AND _id = (SELECT _id FROM DatePrice WHERE Date ="+  "'" + mainActivity.getSqlDate() + "'" +
                                     " LIMIT 1 OFFSET" +  "'" + position + "'"+")",null);
@@ -234,9 +229,7 @@ public class BlankFragment extends Fragment {
                 int db_layout2 = R.layout.small_category_list;
                 CategoryAdapter2 = new SimpleCursorAdapter
                         (view.getContext(),db_layout2,cursor2, headers2, layouts2,0);
-Log.d("ssff","ssff");
-                _typePrice.setEnabled(true);
-                _memoNote.setEnabled(true);
+                Log.d("ssff","ssff");
                 CategoryAdapter2.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
                     @Override
                     public boolean setViewValue(View view1, Cursor cursor, int columnIndex) {
@@ -288,7 +281,6 @@ Log.d("ssff","ssff");
                 String a = mainActivity.getSqlDate();
                 Log.d("etyu3",_nowDate.getText().toString()+"");
                 String memoNote =  _memoNote.getText().toString();
-
                 //データベースヘルパーオブジェクトを作成。
                 DatabaseHelper helper = new DatabaseHelper(getContext());
                 //データベースヘルパーオブジェクトからデータベース接続オブジェクトを取得。
@@ -365,8 +357,6 @@ Log.d("ssff","ssff");
         _typePrice.addTextChangedListener(new GenericTextWatcher(_typePrice));
         _tvCocktailName.addTextChangedListener(new GenericTextWatcher(_tvCocktailName));
         _nowDate.setFocusable(false);
-        _typePrice.setEnabled(false);
-        _memoNote.setEnabled(false);
         return view;
     }
 

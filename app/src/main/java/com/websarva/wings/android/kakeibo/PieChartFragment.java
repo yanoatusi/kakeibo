@@ -65,12 +65,14 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
                     case R.id.backMonth:
                         cl.add(Calendar.MONTH, -1);
                         setnowMonth(_nowMonth);
+                        _piechart.setVisibility(View.INVISIBLE);
                         setupPieChart(_piechart);
                         textViewDateSumPieChart();
                         break;
                     case R.id.nextMonth:
                         cl.add(Calendar.MONTH, +1);
                         setnowMonth(_nowMonth);
+                        _piechart.setVisibility(View.INVISIBLE);
                         setupPieChart(_piechart);
                         textViewDateSumPieChart();
                         break;
@@ -82,13 +84,6 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
 
         textViewDateSumPieChart();
         _nowMonth.setFocusable(false);
-//        _piechart.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                SampleAsyncTask task = new SampleAsyncTask();
-//                task.execute();
-//            }
-//        });
         return view2;
 
     }
@@ -97,32 +92,6 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
         super.onResume();
         setupPieChart(_piechart);
     }
-    private class SampleAsyncTask extends AsyncTask<Void, Long, Long> {
-
-        public SampleAsyncTask() {
-
-        }
-
-        // バックグラウンド処理の前に実行される処理
-        @Override
-        protected void onPreExecute() {
-
-        }
-
-        // バックグラウンド処理完了後に実行される処理
-        @Override
-        protected void onPostExecute(Long result) {
-            setupPieChart(_piechart);
-        }
-
-        // バックグラウンド処理
-        @Override
-        protected Long doInBackground(Void... params) {
-long a=0;
-            return a;
-        }
-    }
-
 
     public void onSelectedDayChange(CalendarView view, int year, int month,
                                     int dayOfMonth) {
@@ -163,7 +132,7 @@ long a=0;
         _piechart.setData(data);
         Log.d("dsfr",textViewDateSumPieChart()+"");
         _piechart.setCenterText("" + textViewDateSumPieChart() + "");
-        _piechart.setCenterTextSize(18f);
+        _piechart.setCenterTextSize(22f);
         _piechart.setEntryLabelColor(Color.BLACK);
         _piechart.setEntryLabelTextSize(16f);
         if (textViewDateSumPieChart() == null) {
