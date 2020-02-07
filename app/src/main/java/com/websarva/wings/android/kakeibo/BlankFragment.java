@@ -284,8 +284,9 @@ Log.d("ssff","ssff");
                 //入力された金額を取得。
                 MainActivity mainActivity = (MainActivity) getActivity();
                 int priceNote = Integer.parseInt(_typePrice.getText().toString());
-                mainActivity.setSqlDate(_nowDate.toString());
+                mainActivity.setSqlDate(_nowDate.getText().toString());
                 String a = mainActivity.getSqlDate();
+                Log.d("etyu3",_nowDate.getText().toString()+"");
                 String memoNote =  _memoNote.getText().toString();
 
                 //データベースヘルパーオブジェクトを作成。

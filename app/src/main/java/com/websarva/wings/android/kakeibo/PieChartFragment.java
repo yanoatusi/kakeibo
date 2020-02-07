@@ -57,20 +57,23 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
         _nextMonth = view2.findViewById(R.id.nextMonth);
         _piechart = view2.findViewById(R.id.peichart);
 
-        setNowDate(_nowMonth);
+        setnowMonth(_nowMonth);
         View.OnClickListener event = new View.OnClickListener() {
             // クリックしたら前月か次月
             public void onClick(View backNext) {
                 switch (backNext.getId()) {
                     case R.id.backMonth:
                         cl.add(Calendar.MONTH, -1);
-                        setNowDate(_nowMonth);
+                        setnowMonth(_nowMonth);
                         setupPieChart(_piechart);
                         textViewDateSumPieChart();
+//                        if (textViewDateSumPieChart() == null) {
+//                            _piechart.setVisibility(View.INVISIBLE);
+//                        }
                         break;
                     case R.id.nextMonth:
                         cl.add(Calendar.MONTH, +1);
-                        setNowDate(_nowMonth);
+                        setnowMonth(_nowMonth);
                         setupPieChart(_piechart);
                         textViewDateSumPieChart();
                         break;
@@ -96,6 +99,7 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
     public void onResume(){
         super.onResume();
         setupPieChart(_piechart);
+
     }
     private class SampleAsyncTask extends AsyncTask<Void, Long, Long> {
 
@@ -165,9 +169,6 @@ long a=0;
         _piechart.setCenterTextSize(18f);
         _piechart.setEntryLabelColor(Color.BLACK);
         _piechart.setEntryLabelTextSize(16f);
-//        if (textViewDateSumPieChart() == null) {
-//            piechart.setVisibility(View.INVISIBLE);
-//        }
     }
 
     public String[] getContacts() {
@@ -177,7 +178,7 @@ long a=0;
                 "INNER JOIN Category ON DatePrice.Category_Id = Category.Category_Id " +
                 "WHERE Date LIKE" + "'%" + getSqlDate() + "%'" +
                 "GROUP BY Large_category";
-        Log.d("etyu3",getSqlDate()+"");
+
         cursor = d.rawQuery(sql, null);
         cursor.moveToFirst();
         ArrayList<String> names = new ArrayList<String>();
@@ -218,7 +219,7 @@ long a=0;
     public String getSqlDate(){
         return _nowMonth.getText().toString();
     }
-    public void setNowDate(EditText dialogBtn) {
+    public void setnowMonth(EditText dialogBtn) {
         try {
 
             int year = cl.get(Calendar.YEAR);
