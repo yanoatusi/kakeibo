@@ -41,4 +41,12 @@ tools:context="com.websarva.wings.android.kakeibo.PieChartFragment">
         android:layout_height="match_parent">
 
     </com.github.mikephil.charting.charts.PieChart>
+    <TextView
+        android:id="@+id/Dnull"
+        android:layout_width="match_parent"
+        android:layout_height="590dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="データがありません"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
 </LinearLayout>

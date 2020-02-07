@@ -67,9 +67,6 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
                         setnowMonth(_nowMonth);
                         setupPieChart(_piechart);
                         textViewDateSumPieChart();
-//                        if (textViewDateSumPieChart() == null) {
-//                            _piechart.setVisibility(View.INVISIBLE);
-//                        }
                         break;
                     case R.id.nextMonth:
                         cl.add(Calendar.MONTH, +1);
@@ -99,7 +96,6 @@ public class PieChartFragment extends Fragment implements CalendarView.OnDateCha
     public void onResume(){
         super.onResume();
         setupPieChart(_piechart);
-
     }
     private class SampleAsyncTask extends AsyncTask<Void, Long, Long> {
 
@@ -165,10 +161,16 @@ long a=0;
 
         //PieChartを取得する:
         _piechart.setData(data);
+        Log.d("dsfr",textViewDateSumPieChart()+"");
         _piechart.setCenterText("" + textViewDateSumPieChart() + "");
         _piechart.setCenterTextSize(18f);
         _piechart.setEntryLabelColor(Color.BLACK);
         _piechart.setEntryLabelTextSize(16f);
+        if (textViewDateSumPieChart() == null) {
+            _piechart.setVisibility(View.GONE);
+        } else {
+            _piechart.setVisibility(View.VISIBLE);
+        }
     }
 
     public String[] getContacts() {
