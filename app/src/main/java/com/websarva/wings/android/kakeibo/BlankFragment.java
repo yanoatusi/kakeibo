@@ -93,7 +93,7 @@ public class BlankFragment extends Fragment {
         _largeCotegoryList = (ListView) view.findViewById(R.id.LargeCotegory);
         _smallCategoryList = (ListView) view.findViewById(R.id.SmallCategory);
 //        _plusButton = (Button) view.findViewById(R.id.plusButton);
-        _minusButton = (Button) view.findViewById(R.id.minusButton);
+//        _minusButton = (Button) view.findViewById(R.id.minusButton);
 //        _memoButton = (Button) view.findViewById(R.id.memoButton);
         _backDate = (Button) view.findViewById(R.id.backDate);
         _nowDate= (EditText) view.findViewById(R.id.nowDate);
@@ -262,7 +262,7 @@ public class BlankFragment extends Fragment {
             }
         };
 //        _plusButton.setOnClickListener(plusMinusEvent);
-        _minusButton.setOnClickListener(plusMinusEvent);
+//        _minusButton.setOnClickListener(plusMinusEvent);
         // _smallCategoryListにリスナを登録。
         _smallCategoryList.setOnItemClickListener(new ListItemClickListener());
 
