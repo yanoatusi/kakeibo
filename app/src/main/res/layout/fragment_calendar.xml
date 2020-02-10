@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="	#FFFFFF"
+    android:background="#ffc0cb"
     tools:context="com.websarva.wings.android.kakeibo.calendarFragment">
 
     <LinearLayout
@@ -19,6 +19,7 @@
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="220dp"
+            android:background="@color/white"
             android:layout_weight="1"/>
     </LinearLayout>
 
@@ -53,7 +54,7 @@
         android:id="@+id/calendarView1"
         android:layout_width="match_parent"
         android:layout_height="350dp"
-        android:background="@color/colorPrimary"
+        android:background="@color/white"
         android:clickable="true" />
 
 </LinearLayout>
