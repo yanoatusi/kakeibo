@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">家計簿</string>
+    <string name="app_name">らくー簿</string>
     <string name="list">記入リスト</string>
 
     <string-array name="lv_cocktaillist">
