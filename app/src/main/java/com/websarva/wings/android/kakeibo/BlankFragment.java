@@ -83,7 +83,6 @@ public class BlankFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_blank, container, false);
         super.onCreate(savedInstanceState);
 
-        //
         _calendarFrgList = (ListView) getActivity().findViewById(R.id.list);
         _gridView = (GridView) view.findViewById(R.id.gridView);
         _tvCocktailName = view.findViewById(R.id.tvCocktailName);
@@ -163,7 +162,6 @@ public class BlankFragment extends Fragment {
 
                     new AlertDialog.Builder(getActivity())
                         .setTitle("削除しますか？")
-                        //.setMessage("削除しますか？")
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -186,7 +184,7 @@ public class BlankFragment extends Fragment {
             }
         });
 
-//        Category表示
+        //Category表示
         listcreatAdapter(_largeCotegoryList,"SELECT Category_Id as _id,Attributable_Type, Large_category FROM Category WHERE Attributable_Type = '支出' GROUP BY Large_category ORDER BY Category_Id",
                 new String[]{"Large_category"},new int[]{R.id.lcategory1},R.layout.category_list);
 
@@ -208,13 +206,12 @@ public class BlankFragment extends Fragment {
         });
         _largeCotegoryList.setAdapter(_saveAdapter);
 
-      //LargeCotegory文字列からSmallCategory文字列の表示
+       //LargeCotegory文字列からSmallCategory文字列の表示
         _largeCotegoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View viewnull, int position, long id) {
 
                 //ここで内容取得
                 String currentId = cursor.getString(cursor.getColumnIndex("Large_category"));
-
                 //DBHelpderを作成する。この時にDBが作成される。
                 DatabaseHelper dbHelper = new DatabaseHelper(getActivity());
                 //DBを読み込み可能状態で開く。
@@ -251,16 +248,16 @@ public class BlankFragment extends Fragment {
         });
 
         //収入と支出の切り替え
-        View.OnClickListener plusMinusEvent = new View.OnClickListener() {
-            // クリックしたら収入
-            public void onClick(View plusMinus) {
-                Button button = (Button) plusMinus.findViewById(plusMinus.getId());
-                String buttonStr = button.getText().toString();
-                listcreatAdapter(_largeCotegoryList,"SELECT rowid as _id,Attributable_Type, Large_category FROM Category WHERE Attributable_Type =" +  "'" + buttonStr + "'" +
-                                "GROUP BY Large_category ORDER BY _id ASC",
-                        new String[]{"Large_category"},new int[]{R.id.lcategory1},R.layout.category_list);
-            }
-        };
+//        View.OnClickListener plusMinusEvent = new View.OnClickListener() {
+//            // クリックしたら収入
+//            public void onClick(View plusMinus) {
+//                Button button = (Button) plusMinus.findViewById(plusMinus.getId());
+//                String buttonStr = button.getText().toString();
+//                listcreatAdapter(_largeCotegoryList,"SELECT rowid as _id,Attributable_Type, Large_category FROM Category WHERE Attributable_Type =" +  "'" + buttonStr + "'" +
+//                                "GROUP BY Large_category ORDER BY _id ASC",
+//                        new String[]{"Large_category"},new int[]{R.id.lcategory1},R.layout.category_list);
+//            }
+//        };
 //        _plusButton.setOnClickListener(plusMinusEvent);
 //        _minusButton.setOnClickListener(plusMinusEvent);
         // _smallCategoryListにリスナを登録。
@@ -302,10 +299,8 @@ public class BlankFragment extends Fragment {
                     Log.d("price",priceNote + "");
                     Log.d("categoryid",categoryIdSave + "");
                     Log.d("mainq",mainActivity.getSqlDate());
-//                    DatePriceStmt.bindLong(1, _id);
 
                     DatePriceStmt.bindString(2, a);
-
                     DatePriceStmt.bindLong(3, priceNote * _priceType);
                     DatePriceStmt.bindLong(4, categoryIdSave);
                     DatePriceStmt.bindString(5, memoNote);
