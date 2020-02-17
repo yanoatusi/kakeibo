@@ -50,7 +50,7 @@ public class BlankFragment extends Fragment {
     ListView _largeCotegoryList;
     ListView _smallCategoryList;
 //    Button _plusButton;
-    Button _minusButton;
+//    Button _minusButton;
 //    Button _memoButton;
     Button _backDate;
     EditText _nowDate;

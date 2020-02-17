@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:text="@string/tv_name"
+            android:text="選択項目"
             android:textSize="20sp"
             android:textColor="@color/black"
             android:background="@color/wheat"/>
